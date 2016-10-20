@@ -5,7 +5,7 @@ import flask
 
 ERROR_MISSING_JSON_INPUT = 1
 
-def error_missing_json_input(url):
+def invalid_json(url):
     template = Template("Error: You may only access $url by POSTing JSON.")
     message = template.substitute(url=url)
     return error_json(ERROR_MISSING_JSON_INPUT, message)
