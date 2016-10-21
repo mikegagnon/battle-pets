@@ -121,10 +121,6 @@ def new_pet():
 
     data = cursor.fetchone()
 
-    app.logger.debug(data)
-
-    response = None
-
     # If this is a new animal
     if data == None:
         cursor.execute('''
