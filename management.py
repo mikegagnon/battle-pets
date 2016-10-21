@@ -5,9 +5,9 @@ import bpcommon
 import flask
 from jsonschema import validate, ValidationError
 from flask import Flask, request, jsonify
-management = Flask(__name__)
+app = Flask(__name__)
 
-DATABASE = "database.db"
+app.config['DATABASE'] = "database.db"
 
 # TODO: put in another file?
 NEW_PET_REQUEST_SCHEMA = {
@@ -55,23 +55,22 @@ class InvalidUsage(Exception):
         d['message'] = self.message
         return d
 
-
 # from http://flask.pocoo.org/docs/0.11/patterns/sqlite3/
 def get_db():
     db = getattr(flask.g, '_database', None)
     if db is None:
-        db = flask.g._database = sqlite3.connect(DATABASE)
+        db = flask.g._database = sqlite3.connect(app.config['DATABASE'])
     return db
 
 # from http://flask.pocoo.org/docs/0.11/patterns/apierrors/
-@management.errorhandler(InvalidUsage)
+@app.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
 
 # from http://flask.pocoo.org/docs/0.11/patterns/sqlite3/
-@management.teardown_appcontext
+@app.teardown_appcontext
 def close_connection(exception):
     db = getattr(flask.g, '_database', None)
     if db is not None:
@@ -79,7 +78,7 @@ def close_connection(exception):
 
 # TODO: rename vars
 # TODO: limit animal name length
-@management.route("/new-pet", methods=["POST"])
+@app.route("/new-pet", methods=["POST"])
 def new_pet():
 
     # Setting silent=True causes get_json to return None on error, instead
@@ -106,7 +105,7 @@ def new_pet():
 
     data = cursor.fetchone()
 
-    management.logger.debug(data)
+    app.logger.debug(data)
 
     response = None
 
@@ -140,4 +139,4 @@ def new_pet():
 
 # TODO: arguments from command line
 if __name__ == "__main__":
-    management.run()
+    app.run()
