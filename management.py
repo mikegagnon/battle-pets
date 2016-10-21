@@ -1,6 +1,7 @@
 # TODO: cleanup imports
 
 import sqlite3
+import argparse
 import bpcommon
 import flask
 from jsonschema import validate, ValidationError
@@ -55,7 +56,8 @@ class InvalidUsage(Exception):
         return d
 
 def init_db():
-    conn = get_db()
+
+    conn = sqlite3.connect(app.config['DATABASE'])
 
     cursor = conn.cursor()
 
@@ -70,6 +72,8 @@ def init_db():
 
     # Save (commit) the changes
     conn.commit()
+
+    conn.close()
 
 # from http://flask.pocoo.org/docs/0.11/patterns/sqlite3/
 def get_db():
@@ -143,5 +147,19 @@ def new_pet():
 
 # TODO: arguments from command line
 if __name__ == "__main__":
-    app.config['DATABASE'] = "database.db"
-    app.run()
+
+    parser = argparse.ArgumentParser(prog='management.py')
+
+    parser.add_argument('--db', nargs='?', help='Filename for the database',
+        default="database.db", dest="database_filename")
+    parser.add_argument('--init_db', action='store_true', dest="init_db",
+        help="Initialize a database")
+
+    args = parser.parse_args()
+
+    app.config['DATABASE'] = args.database_filename
+
+    if args.init_db:
+        init_db()
+    else:
+        app.run()
