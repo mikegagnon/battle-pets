@@ -21,7 +21,10 @@ class ManagementTestCase(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(management.app.config['DATABASE'])
 
+    # TODO: reduce code duplication
     def test_new_pet(self):
+
+        # This succeeds because foo is a new pet
         rv = self.app.post('/new-pet', data=json.dumps(
             {
               "name": "foo",
@@ -33,6 +36,19 @@ class ManagementTestCase(unittest.TestCase):
             content_type='application/json')
 
         assert json.loads(rv.data) == {"success": True}
+
+        # This fails because there is already a pet named foo
+        rv = self.app.post('/new-pet', data=json.dumps(
+            {
+              "name": "foo",
+              "agility": 0.5,
+              "senses": 0.5,
+              "strength": 0.5,
+              "wit": 0.5
+            }),
+            content_type='application/json')
+
+        print rv.data
 
 if __name__ == '__main__':
     unittest.main()
