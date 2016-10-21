@@ -7,8 +7,6 @@ from jsonschema import validate, ValidationError
 from flask import Flask, request, jsonify
 app = Flask(__name__)
 
-app.config['DATABASE'] = "database.db"
-
 # TODO: put in another file?
 NEW_PET_REQUEST_SCHEMA = {
     "type": "object",
@@ -156,4 +154,5 @@ def new_pet():
 
 # TODO: arguments from command line
 if __name__ == "__main__":
+    app.config['DATABASE'] = "database.db"
     app.run()
