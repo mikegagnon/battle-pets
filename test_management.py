@@ -32,7 +32,7 @@ class ManagementTestCase(unittest.TestCase):
             }),
             content_type='application/json')
 
-        print rv.data
+        assert json.loads(rv.data) == {"success": True}
 
 if __name__ == '__main__':
     unittest.main()
