@@ -24,31 +24,30 @@ class ManagementTestCase(unittest.TestCase):
     # TODO: reduce code duplication
     def test_new_pet(self):
 
-        # This succeeds because foo is a new pet
-        rv = self.app.post('/new-pet', data=json.dumps(
+        request_data = json.dumps(
             {
               "name": "foo",
               "agility": 0.5,
               "senses": 0.5,
               "strength": 0.5,
               "wit": 0.5
-            }),
+            })
+
+        # This succeeds because foo is a new pet
+        rv = self.app.post('/new-pet', data=request_data,
             content_type='application/json')
 
-        assert json.loads(rv.data) == {"success": True}
+        assert rv.status == "200 OK"
+        assert rv.data == ""
 
         # This fails because there is already a pet named foo
-        rv = self.app.post('/new-pet', data=json.dumps(
-            {
-              "name": "foo",
-              "agility": 0.5,
-              "senses": 0.5,
-              "strength": 0.5,
-              "wit": 0.5
-            }),
+        rv = self.app.post('/new-pet', data=request_data,
             content_type='application/json')
 
-        print rv.data
+        assert rv.status == "400 BAD REQUEST"
+        assert json.loads(rv.data) == {
+                "message": "A pet with the name 'foo' already exists."
+            }
 
 if __name__ == '__main__':
     unittest.main()

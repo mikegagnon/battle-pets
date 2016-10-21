@@ -5,6 +5,7 @@ import bpcommon
 import flask
 from jsonschema import validate, ValidationError
 from flask import Flask, request, jsonify
+
 app = Flask(__name__)
 
 # TODO: put in another file?
@@ -137,20 +138,12 @@ def new_pet():
 
         conn.commit()
 
-        response = {
-            "success": True
-        }
+        return ''
 
     else:
+        raise InvalidUsage("A pet with the name '%s' already exists." %
+            request_data["name"])
 
-        # TODO: escape animal name?
-        response = {
-            "success": False,
-            "message": "A pet with the name '%s' already exists." %
-                request_data["name"]
-        }
-
-    return flask.jsonify(**response)
 
 # TODO: arguments from command line
 if __name__ == "__main__":
