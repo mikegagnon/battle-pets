@@ -55,6 +55,23 @@ class InvalidUsage(Exception):
         d['message'] = self.message
         return d
 
+def init_db():
+    conn = get_db()
+
+    cursor = conn.cursor()
+
+    # TODO: uniq names? ids?
+    # Create table
+    cursor.execute('''CREATE TABLE Animals
+                 (name text,
+                 strength real,
+                 agility real,
+                 wit real,
+                 senses real)''')
+
+    # Save (commit) the changes
+    conn.commit()
+
 # from http://flask.pocoo.org/docs/0.11/patterns/sqlite3/
 def get_db():
     db = getattr(flask.g, '_database', None)
