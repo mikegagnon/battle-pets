@@ -64,7 +64,7 @@ def init_db():
     # TODO: uniq names? ids?
     # Create table
     cursor.execute('''CREATE TABLE Animals
-                 (name text,
+                 (name text PRIMARY KEY,
                  strength real,
                  agility real,
                  wit real,
