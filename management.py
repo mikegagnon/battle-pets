@@ -1,3 +1,5 @@
+# TODO: cleanup imports
+
 import sqlite3
 import bpcommon
 import flask
@@ -5,7 +7,7 @@ from jsonschema import validate, ValidationError
 from flask import Flask, request, jsonify
 management = Flask(__name__)
 
-DATABASE = None
+DATABASE = "database.db"
 
 # TODO: put in another file?
 NEW_PET_REQUEST_SCHEMA = {
@@ -58,7 +60,7 @@ class InvalidUsage(Exception):
 def get_db():
     db = getattr(flask.g, '_database', None)
     if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
+        db = flask.g._database = sqlite3.connect(DATABASE)
     return db
 
 # from http://flask.pocoo.org/docs/0.11/patterns/apierrors/
@@ -75,6 +77,8 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+# TODO: rename vars
+# TODO: limit animal name length
 @management.route("/new-pet", methods=["POST"])
 def new_pet():
 
@@ -94,9 +98,46 @@ def new_pet():
         schema = {"NEW_PET_REQUEST_SCHEMA" : NEW_PET_REQUEST_SCHEMA}
         raise InvalidUsage(message, schema) 
 
-    return str(request_data)
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT name from Animals where name = ?;",
+        (request_data["name"], ))
+
+    data = cursor.fetchone()
+
+    management.logger.debug(data)
+
+    response = None
+
+    # If this is a new animal
+    if data == None:
+        cursor.execute('''
+            INSERT INTO Animals(name, strength, agility, wit, senses)
+            VALUES (?, ?, ?, ?, ?);''',
+            (request_data["name"],
+            request_data["strength"],
+            request_data["agility"],
+            request_data["wit"],
+            request_data["senses"]))
+
+        conn.commit()
+
+        response = {
+            "success": True
+        }
+
+    else:
+
+        # TODO: escape animal name?
+        response = {
+            "success": False,
+            "message": "A pet with the name '%s' already exists." %
+                request_data["name"]
+        }
+
+    return flask.jsonify(**response)
 
 # TODO: arguments from command line
 if __name__ == "__main__":
-    DATABASE = "test.db"
     management.run()
