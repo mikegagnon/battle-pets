@@ -1,5 +1,3 @@
-# TODO: cleanup imports
-
 import argparse
 import bpcommon
 import flask
@@ -7,6 +5,8 @@ import jsonschema
 import sqlite3
 
 app = flask.Flask(__name__)
+
+
 
 # TODO: put in another file?
 NEW_PET_REQUEST_SCHEMA = {
@@ -64,8 +64,6 @@ def init_db():
 
     cursor = conn.cursor()
 
-    # TODO: uniq names? ids?
-    # Create table
     cursor.execute('''CREATE TABLE Pets
                  (name TEXT,
                  strength REAL,
@@ -73,7 +71,6 @@ def init_db():
                  wit REAL,
                  senses REAL)''')
 
-    # Save (commit) the changes
     conn.commit()
 
     conn.close()
@@ -88,7 +85,7 @@ def get_db():
 # from http://flask.pocoo.org/docs/0.11/patterns/apierrors/
 @app.errorhandler(InvalidUsage)
 @app.errorhandler(NotFound)
-def handle_invalid_usage(error):
+def handle_error(error):
     response = flask.jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
@@ -100,7 +97,6 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-# TODO: rename vars
 # TODO: limit animal name length
 # TODO: limit animal attributes
 @app.route("/new-pet", methods=["POST"])
@@ -130,7 +126,7 @@ def new_pet():
 
     data = cursor.fetchone()
 
-    # If this is a new animal
+    # If this is a new pet
     if data == None:
         cursor.execute('''
             INSERT INTO Pets(name, strength, agility, wit, senses)
@@ -161,7 +157,6 @@ def get_pet(petname):
 
     data = cursor.fetchone()
 
-    # If this is a new animal
     if data == None:
         raise NotFound("A pet with the name '%s' does not exist." % petname)
     else:
