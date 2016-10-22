@@ -1,5 +1,4 @@
 import argparse
-import bpcommon
 import flask
 import jsonschema
 import sqlite3
