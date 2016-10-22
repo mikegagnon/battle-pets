@@ -21,15 +21,14 @@ class ManagementTestCase(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(management.app.config['DATABASE'])
 
-    # TODO: reorder attributes
     def post_new_pet(self, name, agility, senses, strength, wit):
         request_data = json.dumps(
             {
               "name": name,
-              "agility": agility,
-              "senses": senses,
               "strength": strength,
-              "wit": wit
+              "agility": agility,
+              "wit": wit,
+              "senses": senses,
             })
 
         # This succeeds because foo is a new pet
@@ -92,20 +91,18 @@ class ManagementTestCase(unittest.TestCase):
         assert response.status == "200 OK"
         assert response.data == ""
 
-        # TODO: reorder attributes
         response = self.app.get("get-pet/foo")
         assert response.status == "200 OK"
         assert json.loads(response.data) == {
                 "name": "foo",
-                "agility": 0.25,
-                "senses": 0.25,
                 "strength": 0.25,
-                "wit": 0.25
+                "agility": 0.25,
+                "wit": 0.25,
+                "senses": 0.25,
             }
 
     def test_get_pet_failure(self):
 
-        # TODO: reorder attributes
         response = self.app.get("get-pet/foo")
 
         assert response.status == "404 NOT FOUND"
