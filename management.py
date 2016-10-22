@@ -56,6 +56,7 @@ class InvalidUsage(RestError):
 class NotFound(RestError):
     status_code = 404
 
+# TODO: move this into separate file?
 def init_db():
 
     conn = sqlite3.connect(app.config['DATABASE'])
