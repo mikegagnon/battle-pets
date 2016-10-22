@@ -66,12 +66,12 @@ def init_db():
 
     # TODO: uniq names? ids?
     # Create table
-    cursor.execute('''CREATE TABLE Animals
-                 (name text PRIMARY KEY,
-                 strength real,
-                 agility real,
-                 wit real,
-                 senses real)''')
+    cursor.execute('''CREATE TABLE Pets
+                 (name TEXT,
+                 strength REAL,
+                 agility REAL,
+                 wit REAL,
+                 senses REAL)''')
 
     # Save (commit) the changes
     conn.commit()
@@ -125,7 +125,7 @@ def new_pet():
     conn = get_db()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT name from Animals where name = ?;",
+    cursor.execute("SELECT name FROM Pets WHERE name = ?;",
         (request_data["name"], ))
 
     data = cursor.fetchone()
@@ -133,7 +133,7 @@ def new_pet():
     # If this is a new animal
     if data == None:
         cursor.execute('''
-            INSERT INTO Animals(name, strength, agility, wit, senses)
+            INSERT INTO Pets(name, strength, agility, wit, senses)
             VALUES (?, ?, ?, ?, ?);''',
             (request_data["name"],
             request_data["strength"],
@@ -156,8 +156,8 @@ def get_pet(petname):
     conn = get_db()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT name, strength, agility, wit, senses from " +
-        "Animals where name = ?;", (petname, ))
+    cursor.execute("SELECT name, strength, agility, wit, senses FROM " +
+        "Pets where name = ?;", (petname, ))
 
     data = cursor.fetchone()
 
