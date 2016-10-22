@@ -14,3 +14,4 @@ ERRATA:
 - It's been about 12 years since I've professionally coded in Python
 - Unfamiliar with PEP 8 style
 - Never used a job queue before
+- No security built int
