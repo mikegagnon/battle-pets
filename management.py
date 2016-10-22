@@ -6,9 +6,6 @@ import sqlite3
 
 app = flask.Flask(__name__)
 
-
-
-# TODO: put in another file?
 NEW_PET_REQUEST_SCHEMA = {
     "type": "object",
     "properties": {
