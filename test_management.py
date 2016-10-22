@@ -5,6 +5,8 @@ import management
 import unittest
 import tempfile
 
+import db
+
 # from http://flask.pocoo.org/docs/0.11/testing/
 
 class ManagementTestCase(unittest.TestCase):
@@ -15,7 +17,7 @@ class ManagementTestCase(unittest.TestCase):
         self.app = management.app.test_client()
         self.app.debug = True
         with management.app.app_context():
-            management.init_db()
+            db.init_db(management.app)
 
     def tearDown(self):
         os.close(self.db_fd)

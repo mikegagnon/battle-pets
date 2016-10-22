@@ -3,6 +3,8 @@ import flask
 import jsonschema
 import sqlite3
 
+import db
+
 app = flask.Flask(__name__)
 
 MAX_PET_NAME_LENGTH = 100
@@ -56,31 +58,6 @@ class InvalidUsage(RestError):
 class NotFound(RestError):
     status_code = 404
 
-# TODO: move this into separate file?
-def init_db():
-
-    conn = sqlite3.connect(app.config['DATABASE'])
-
-    cursor = conn.cursor()
-
-    cursor.execute('''CREATE TABLE Pets
-                 (name TEXT,
-                 strength REAL,
-                 agility REAL,
-                 wit REAL,
-                 senses REAL)''')
-
-    conn.commit()
-
-    conn.close()
-
-# from http://flask.pocoo.org/docs/0.11/patterns/sqlite3/
-def get_db():
-    db = getattr(flask.g, '_database', None)
-    if db is None:
-        db = flask.g._database = sqlite3.connect(app.config['DATABASE'])
-    return db
-
 # from http://flask.pocoo.org/docs/0.11/patterns/apierrors/
 @app.errorhandler(InvalidUsage)
 @app.errorhandler(NotFound)
@@ -127,7 +104,7 @@ def new_pet():
         schema = {"NEW_PET_REQUEST_SCHEMA" : NEW_PET_REQUEST_SCHEMA}
         raise InvalidUsage(message, schema) 
 
-    conn = get_db()
+    conn = db.get_db(app)
     cursor = conn.cursor()
 
     cursor.execute("SELECT name FROM Pets WHERE name = ?;",
@@ -174,7 +151,7 @@ def get_pet(petname):
 
         raise InvalidUsage(message)
 
-    conn = get_db()
+    conn = db.get_db(app)
     cursor = conn.cursor()
 
     cursor.execute("SELECT name, strength, agility, wit, senses FROM " +
@@ -201,14 +178,9 @@ if __name__ == "__main__":
 
     parser.add_argument('--db', nargs='?', help='Filename for the database',
         default="database.db", dest="database_filename")
-    parser.add_argument('--init_db', action='store_true', dest="init_db",
-        help="Initialize a database")
 
     args = parser.parse_args()
 
     app.config['DATABASE'] = args.database_filename
 
-    if args.init_db:
-        init_db()
-    else:
-        app.run()
+    app.run()
