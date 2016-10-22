@@ -1,12 +1,17 @@
 import argparse
 import flask
 import jsonschema
+import redis
+import rq
 
+import battle
 import db
 import error
 import validation
 
 app = flask.Flask(__name__)
+
+queue = rq.Queue(connection=redis.Redis())
 
 CONTEST_SCHEMA = {
     "type": "array",
@@ -49,10 +54,10 @@ def contest():
         (request_data[0], request_data[1]))
 
     # TODO: change data to pet
-    data = cursor.fetchall()
+    pets = cursor.fetchall()
 
     # TODO: find which petname(s) is/are missing
-    if len(data) != 2:
+    if len(pets) != 2:
         message = "One or more of the pets you specified do not exist."
         raise error.InvalidUsage(message)
 
