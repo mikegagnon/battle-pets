@@ -4,6 +4,7 @@ import jsonschema
 import sqlite3
 
 import db
+import error
 
 app = flask.Flask(__name__)
 
@@ -40,27 +41,8 @@ NEW_PET_REQUEST_SCHEMA = {
 }
 
 # from http://flask.pocoo.org/docs/0.11/patterns/apierrors/
-class RestError(Exception):
-
-    def __init__(self, message, payload = None):
-        Exception.__init__(self)
-        self.message = message
-        self.payload = payload
-
-    def to_dict(self):
-        d = dict(self.payload or ())
-        d['message'] = self.message
-        return d
-
-class InvalidUsage(RestError):
-    status_code = 400
-
-class NotFound(RestError):
-    status_code = 404
-
-# from http://flask.pocoo.org/docs/0.11/patterns/apierrors/
-@app.errorhandler(InvalidUsage)
-@app.errorhandler(NotFound)
+@app.errorhandler(error.InvalidUsage)
+@app.errorhandler(error.NotFound)
 def handle_error(error):
     response = flask.jsonify(error.to_dict())
     response.status_code = error.status_code
@@ -94,14 +76,14 @@ def new_pet():
     request_data = flask.request.get_json(silent = True)
 
     if request_data == None:
-        raise InvalidUsage("No JSON object could be decoded") 
+        raise error.InvalidUsage("No JSON object could be decoded") 
 
     try:
         jsonschema.validate(request_data, NEW_PET_REQUEST_SCHEMA)
     except jsonschema.ValidationError:
         message = "Your JSON post does not match NEW_PET_REQUEST_SCHEMA."
         schema = {"NEW_PET_REQUEST_SCHEMA" : NEW_PET_REQUEST_SCHEMA}
-        raise InvalidUsage(message, schema) 
+        raise error.InvalidUsage(message, schema) 
 
     conn = db.get_db(app)
     cursor = conn.cursor()
@@ -135,10 +117,10 @@ def new_pet():
                 "<= 1.0 AND the length of name must be <= %s." % \
                 MAX_PET_NAME_LENGTH
 
-            raise InvalidUsage(message)
+            raise error.InvalidUsage(message)
 
     else:
-        raise InvalidUsage("A pet with the name '%s' already exists." %
+        raise error.InvalidUsage("A pet with the name '%s' already exists." %
             request_data["name"])
 
 
@@ -148,7 +130,7 @@ def get_pet(petname):
     if not valid_pet_name(petname):
         message = "The name of the pet must be <= %s" % MAX_PET_NAME_LENGTH
 
-        raise InvalidUsage(message)
+        raise error.InvalidUsage(message)
 
     conn = db.get_db(app)
     cursor = conn.cursor()
@@ -159,7 +141,8 @@ def get_pet(petname):
     data = cursor.fetchone()
 
     if data == None:
-        raise NotFound("A pet with the name '%s' does not exist." % petname)
+        raise error.NotFound("A pet with the name '%s' does not exist." %
+            petname)
     else:
         response = {
                 "name": data[0],
