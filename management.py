@@ -84,7 +84,6 @@ def valid_new_pet(pet):
         pet["wit"] +
         pet["senses"]) <= 1.0
 
-# TODO: limit animal name length
 @app.route("/new-pet", methods=["POST"])
 def new_pet():
 
