@@ -17,3 +17,6 @@ class InvalidUsage(RestError):
 
 class NotFound(RestError):
     status_code = 404
+
+class Processing(RestError):
+    status_code = 102

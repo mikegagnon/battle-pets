@@ -32,6 +32,7 @@ def close_connection(exception):
 # from http://flask.pocoo.org/docs/0.11/patterns/apierrors/
 @app.errorhandler(error.InvalidUsage)
 @app.errorhandler(error.NotFound)
+@app.errorhandler(error.Processing)
 def handle_error(error):
     response = flask.jsonify(error.to_dict())
     response.status_code = error.status_code
@@ -68,6 +69,17 @@ def contest():
     job = queue.enqueue(battle.do_battle, pets, result_ttl=ONE_DAY, ttl=ONE_DAY)
 
     return flask.json.dumps(job.id)
+
+@app.route("/contest-result/<string:jobid>", methods=["GET"])
+def contest_result(jobid):
+
+    job = queue.fetch_job(jobid)
+
+    if job.result == None:
+        raise error.Processing("The server is still processing this battle.")
+
+    return flask.json.dumps(job.result)
+
 
 # TODO: factor out common code
 if __name__ == "__main__":
