@@ -38,7 +38,6 @@ class ManagementTestCase(unittest.TestCase):
 
         return rv
 
-    # TODO: reduce code duplication
     def test_new_pet_duplicate(self):
 
         response = self.post_new_pet("foo", 0.25, 0.25, 0.25, 0.25)
@@ -85,7 +84,6 @@ class ManagementTestCase(unittest.TestCase):
         assert response.status == "400 BAD REQUEST"
         assert json.loads(response.data)["message"] == \
             "The sum of (strength, agility, wit, senses) must be <= 1.0"
-
 
     def test_get_pet_success(self):
 
