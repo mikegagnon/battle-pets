@@ -66,8 +66,7 @@ if __name__ == "__main__":
         default="database.db", dest="database_filename")
 
     parser.add_argument('--port', nargs='?', help="The port to run the " + \
-        "server on", default="5001", dest="port")
-
+        "server on", default=5001, dest="port", type=int)
 
     args = parser.parse_args()
 
