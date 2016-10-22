@@ -41,12 +41,12 @@ class ManagementTestCase(unittest.TestCase):
     # TODO: reduce code duplication
     def test_new_pet_duplicate(self):
 
-        response = self.post_new_pet("foo", 0.5, 0.5, 0.5, 0.5)
+        response = self.post_new_pet("foo", 0.25, 0.25, 0.25, 0.25)
         assert response.status == "200 OK"
         assert response.data == ""
 
         # This fails because there is already a pet named foo
-        response = self.post_new_pet("foo", 0.5, 0.5, 0.5, 0.5)
+        response = self.post_new_pet("foo", 0.25, 0.25, 0.25, 0.25)
         assert response.status == "400 BAD REQUEST"
         assert json.loads(response.data) == {
                 "message": "A pet with the name 'foo' already exists."
@@ -79,10 +79,18 @@ class ManagementTestCase(unittest.TestCase):
         assert json.loads(response.data)["message"] == \
             "Your JSON post does not match NEW_PET_REQUEST_SCHEMA."
 
+    def test_new_pet_bad_attributes(self):
+
+        response = self.post_new_pet("foo", 0.25, 0.25, 0.25, 0.2500001)
+        assert response.status == "400 BAD REQUEST"
+        assert json.loads(response.data)["message"] == \
+            "The sum of (strength, agility, wit, senses) must be <= 1.0"
+
+
     def test_get_pet_success(self):
 
         # First, add foo to the database
-        response = self.post_new_pet("foo", 0.5, 0.5, 0.5, 0.5)
+        response = self.post_new_pet("foo", 0.25, 0.25, 0.25, 0.25)
         assert response.status == "200 OK"
         assert response.data == ""
 
@@ -91,10 +99,10 @@ class ManagementTestCase(unittest.TestCase):
         assert response.status == "200 OK"
         assert json.loads(response.data) == {
                 "name": "foo",
-                "agility": 0.5,
-                "senses": 0.5,
-                "strength": 0.5,
-                "wit": 0.5
+                "agility": 0.25,
+                "senses": 0.25,
+                "strength": 0.25,
+                "wit": 0.25
             }
 
     def test_get_pet_failure(self):

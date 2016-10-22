@@ -97,6 +97,14 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+
+# The sum of the attributes must be <= 1.0
+def valid_new_pet(pet):
+    return (pet["strength"] +
+        pet["agility"] +
+        pet["wit"] +
+        pet["senses"]) <= 1.0
+
 # TODO: limit animal name length
 # TODO: limit animal attributes
 @app.route("/new-pet", methods=["POST"])
@@ -124,22 +132,31 @@ def new_pet():
     cursor.execute("SELECT name FROM Pets WHERE name = ?;",
         (request_data["name"], ))
 
+    # TODO: change data to pet
     data = cursor.fetchone()
 
     # If this is a new pet
     if data == None:
-        cursor.execute('''
-            INSERT INTO Pets(name, strength, agility, wit, senses)
-            VALUES (?, ?, ?, ?, ?);''',
-            (request_data["name"],
-            request_data["strength"],
-            request_data["agility"],
-            request_data["wit"],
-            request_data["senses"]))
 
-        conn.commit()
+        if valid_new_pet(request_data):
 
-        return ''
+            cursor.execute('''
+                INSERT INTO Pets(name, strength, agility, wit, senses)
+                VALUES (?, ?, ?, ?, ?);''',
+                (request_data["name"],
+                request_data["strength"],
+                request_data["agility"],
+                request_data["wit"],
+                request_data["senses"]))
+
+            conn.commit()
+
+            return ''
+
+        else:
+            message = "The sum of (strength, agility, wit, senses) must be " + \
+                "<= 1.0"
+            raise InvalidUsage(message)
 
     else:
         raise InvalidUsage("A pet with the name '%s' already exists." %
