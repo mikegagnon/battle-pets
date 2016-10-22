@@ -3,6 +3,11 @@ pip install jsonschema
 pip install redis
 pip install rq
 
+wget http://download.redis.io/redis-stable.tar.gz
+tar xvzf redis-stable.tar.gz
+cd redis-stable
+make
+
 ERRATA:
 
 - Never built a REST service before
@@ -14,4 +19,5 @@ ERRATA:
 - It's been about 12 years since I've professionally coded in Python
 - Unfamiliar with PEP 8 style
 - Never used a job queue before
-- No security built int
+- No security built in
+- Using polling instead of callbacks
