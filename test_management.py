@@ -21,31 +21,34 @@ class ManagementTestCase(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(management.app.config['DATABASE'])
 
-    # TODO: reduce code duplication
-    def test_new_pet_duplicate(self):
-
+    # TODO: reorder attributes
+    def post_new_pet(self, name, agility, senses, strength, wit):
         request_data = json.dumps(
             {
-              "name": "foo",
-              "agility": 0.5,
-              "senses": 0.5,
-              "strength": 0.5,
-              "wit": 0.5
+              "name": name,
+              "agility": agility,
+              "senses": senses,
+              "strength": strength,
+              "wit": wit
             })
 
         # This succeeds because foo is a new pet
         rv = self.app.post('/new-pet', data=request_data,
             content_type='application/json')
 
-        assert rv.status == "200 OK"
-        assert rv.data == ""
+        return rv
+
+    # TODO: reduce code duplication
+    def test_new_pet_duplicate(self):
+
+        response = self.post_new_pet("foo", 0.5, 0.5, 0.5, 0.5)
+        assert response.status == "200 OK"
+        assert response.data == ""
 
         # This fails because there is already a pet named foo
-        rv = self.app.post('/new-pet', data=request_data,
-            content_type='application/json')
-
-        assert rv.status == "400 BAD REQUEST"
-        assert json.loads(rv.data) == {
+        response = self.post_new_pet("foo", 0.5, 0.5, 0.5, 0.5)
+        assert response.status == "400 BAD REQUEST"
+        assert json.loads(response.data) == {
                 "message": "A pet with the name 'foo' already exists."
             }
 
@@ -53,11 +56,11 @@ class ManagementTestCase(unittest.TestCase):
 
         request_data = "abc"
 
-        rv = self.app.post('/new-pet', data=request_data,
+        response = self.app.post('/new-pet', data=request_data,
             content_type='application/json')
 
-        assert rv.status == "400 BAD REQUEST"
-        assert json.loads(rv.data) == {
+        assert response.status == "400 BAD REQUEST"
+        assert json.loads(response.data) == {
                 "message": "No JSON object could be decoded"
             }
 
@@ -69,13 +72,12 @@ class ManagementTestCase(unittest.TestCase):
             })
 
         # This succeeds because foo is a new pet
-        rv = self.app.post('/new-pet', data=request_data,
+        response = self.app.post('/new-pet', data=request_data,
             content_type='application/json')
 
-        assert rv.status == "400 BAD REQUEST"
-        assert json.loads(rv.data)["message"] == \
+        assert response.status == "400 BAD REQUEST"
+        assert json.loads(response.data)["message"] == \
             "Your JSON post does not match NEW_PET_REQUEST_SCHEMA."
-
 
 
 if __name__ == '__main__':
