@@ -82,7 +82,25 @@ class ManagementTestCase(unittest.TestCase):
         response = self.post_new_pet("foo", 0.25, 0.25, 0.25, 0.2500001)
         assert response.status == "400 BAD REQUEST"
         assert json.loads(response.data)["message"] == \
-            "The sum of (strength, agility, wit, senses) must be <= 1.0"
+            "The sum of (strength, agility, wit, senses) must be <= 1.0 " + \
+            "AND the length of name must be <= %s." % \
+            management.MAX_PET_NAME_LENGTH
+
+    def test_new_pet_bad_name(self):
+        length = 1 + management.MAX_PET_NAME_LENGTH
+        response = self.post_new_pet("X" * length, 0.2, 0.2, 0.2, 0.2)
+        assert response.status == "400 BAD REQUEST"
+        assert json.loads(response.data)["message"] == \
+            "The sum of (strength, agility, wit, senses) must be <= 1.0 " + \
+            "AND the length of name must be <= %s." % \
+            management.MAX_PET_NAME_LENGTH
+
+    def test_new_pet_good_name(self):
+
+        length = management.MAX_PET_NAME_LENGTH
+        response = self.post_new_pet("X" * length, 0.2, 0.2, 0.2, 0.2)
+        assert response.status == "200 OK"
+        assert response.data == ""
 
     def test_get_pet_success(self):
 

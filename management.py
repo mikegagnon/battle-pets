@@ -6,6 +6,8 @@ import sqlite3
 
 app = flask.Flask(__name__)
 
+MAX_PET_NAME_LENGTH = 100
+
 NEW_PET_REQUEST_SCHEMA = {
     "type": "object",
     "properties": {
@@ -97,7 +99,8 @@ def close_connection(exception):
 
 # The sum of the attributes must be <= 1.0
 def valid_new_pet(pet):
-    return (pet["strength"] +
+    return  len(pet["name"]) <= MAX_PET_NAME_LENGTH and \
+        (pet["strength"] +
         pet["agility"] +
         pet["wit"] +
         pet["senses"]) <= 1.0
@@ -151,7 +154,9 @@ def new_pet():
 
         else:
             message = "The sum of (strength, agility, wit, senses) must be " + \
-                "<= 1.0"
+                "<= 1.0 AND the length of name must be <= %s." % \
+                MAX_PET_NAME_LENGTH
+
             raise InvalidUsage(message)
 
     else:
