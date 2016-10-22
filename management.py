@@ -150,8 +150,11 @@ if __name__ == "__main__":
     parser.add_argument('--db', nargs='?', help='Filename for the database',
         default="database.db", dest="database_filename")
 
+    parser.add_argument('--port', nargs='?', help="The port to run the " + \
+        "server on", default=5000, dest="port", type=int)
+
     args = parser.parse_args()
 
     app.config['DATABASE'] = args.database_filename
 
-    app.run()
+    app.run("0.0.0.0", args.port)
