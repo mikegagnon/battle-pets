@@ -1,4 +1,5 @@
 
+# TODO: cleanup imports
 from flask import json
 import os
 import management
@@ -7,8 +8,24 @@ import tempfile
 
 import db
 
-# from http://flask.pocoo.org/docs/0.11/testing/
+# TODO: put in another file?
+def post_new_pet(app, name, agility, senses, strength, wit):
+    request_data = json.dumps(
+        {
+          "name": name,
+          "strength": strength,
+          "agility": agility,
+          "wit": wit,
+          "senses": senses,
+        })
 
+    # This succeeds because foo is a new pet
+    rv = app.post('/new-pet', data=request_data,
+        content_type='application/json')
+
+    return rv
+
+# from http://flask.pocoo.org/docs/0.11/testing/
 class ManagementTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -23,30 +40,14 @@ class ManagementTestCase(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(management.app.config['DATABASE'])
 
-    def post_new_pet(self, name, agility, senses, strength, wit):
-        request_data = json.dumps(
-            {
-              "name": name,
-              "strength": strength,
-              "agility": agility,
-              "wit": wit,
-              "senses": senses,
-            })
-
-        # This succeeds because foo is a new pet
-        rv = self.app.post('/new-pet', data=request_data,
-            content_type='application/json')
-
-        return rv
-
     def test_new_pet_duplicate(self):
 
-        response = self.post_new_pet("foo", 0.25, 0.25, 0.25, 0.25)
+        response = post_new_pet(self.app, "foo", 0.25, 0.25, 0.25, 0.25)
         assert response.status == "200 OK"
         assert response.data == ""
 
         # This fails because there is already a pet named foo
-        response = self.post_new_pet("foo", 0.25, 0.25, 0.25, 0.25)
+        response = post_new_pet(self.app, "foo", 0.25, 0.25, 0.25, 0.25)
         assert response.status == "400 BAD REQUEST"
         assert json.loads(response.data) == {
                 "message": "A pet with the name 'foo' already exists."
@@ -81,7 +82,7 @@ class ManagementTestCase(unittest.TestCase):
 
     def test_new_pet_bad_attributes(self):
 
-        response = self.post_new_pet("foo", 0.25, 0.25, 0.25, 0.2500001)
+        response = post_new_pet(self.app, "foo", 0.25, 0.25, 0.25, 0.2500001)
         assert response.status == "400 BAD REQUEST"
         assert json.loads(response.data)["message"] == \
             "The sum of (strength, agility, wit, senses) must be <= 1.0 " + \
@@ -90,7 +91,7 @@ class ManagementTestCase(unittest.TestCase):
 
     def test_new_pet_bad_name(self):
         length = 1 + management.MAX_PET_NAME_LENGTH
-        response = self.post_new_pet("X" * length, 0.2, 0.2, 0.2, 0.2)
+        response = post_new_pet(self.app, "X" * length, 0.2, 0.2, 0.2, 0.2)
         assert response.status == "400 BAD REQUEST"
         assert json.loads(response.data)["message"] == \
             "The sum of (strength, agility, wit, senses) must be <= 1.0 " + \
@@ -100,14 +101,14 @@ class ManagementTestCase(unittest.TestCase):
     def test_new_pet_good_name(self):
 
         length = management.MAX_PET_NAME_LENGTH
-        response = self.post_new_pet("X" * length, 0.2, 0.2, 0.2, 0.2)
+        response = post_new_pet(self.app, "X" * length, 0.2, 0.2, 0.2, 0.2)
         assert response.status == "200 OK"
         assert response.data == ""
 
     def test_get_pet_success(self):
 
         # First, add foo to the database
-        response = self.post_new_pet("foo", 0.25, 0.25, 0.25, 0.25)
+        response = post_new_pet(self.app, "foo", 0.25, 0.25, 0.25, 0.25)
         assert response.status == "200 OK"
         assert response.data == ""
 
