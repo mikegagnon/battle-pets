@@ -1,13 +1,12 @@
 # TODO: cleanup imports
 
-import sqlite3
 import argparse
 import bpcommon
 import flask
-from jsonschema import validate, ValidationError
-from flask import Flask, request, jsonify, json
+import jsonschema
+import sqlite3
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
 # TODO: put in another file?
 NEW_PET_REQUEST_SCHEMA = {
@@ -90,7 +89,7 @@ def get_db():
 @app.errorhandler(InvalidUsage)
 @app.errorhandler(NotFound)
 def handle_invalid_usage(error):
-    response = jsonify(error.to_dict())
+    response = flask.jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
 
@@ -111,14 +110,14 @@ def new_pet():
     # of calling on_json_loading_failed. The latter case is undesirable because
     # it leads to an HTML error message, whereas we want to produce JSON
     # error messages.
-    request_data = request.get_json(silent = True)
+    request_data = flask.request.get_json(silent = True)
 
     if request_data == None:
         raise InvalidUsage("No JSON object could be decoded") 
 
     try:
-        validate(request_data, NEW_PET_REQUEST_SCHEMA)
-    except ValidationError:
+        jsonschema.validate(request_data, NEW_PET_REQUEST_SCHEMA)
+    except jsonschema.ValidationError:
         message = "Your JSON post does not match NEW_PET_REQUEST_SCHEMA."
         schema = {"NEW_PET_REQUEST_SCHEMA" : NEW_PET_REQUEST_SCHEMA}
         raise InvalidUsage(message, schema) 
@@ -173,7 +172,7 @@ def get_pet(petname):
                 "wit": data[3],
                 "senses": data[4],
             }
-        return json.dumps(response)
+        return flask.json.dumps(response)
 
 # TODO: arguments from command line
 if __name__ == "__main__":
