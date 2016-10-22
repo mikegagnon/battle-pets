@@ -80,10 +80,9 @@ def new_pet():
     cursor.execute("SELECT name FROM Pets WHERE name = ?;",
         (request_data["name"], ))
 
-    # TODO: change data to pet
-    data = cursor.fetchone()
+    pet = cursor.fetchone()
 
-    if data != None:
+    if pet != None:
         raise error.InvalidUsage("A pet with the name '%s' already exists." %
             request_data["name"])
 
