@@ -5,6 +5,7 @@ import sqlite3
 
 import db
 import error
+import validation
 
 app = flask.Flask(__name__)
 
@@ -69,21 +70,8 @@ def valid_new_pet(pet):
 @app.route("/new-pet", methods=["POST"])
 def new_pet():
 
-    # Setting silent=True causes get_json to return None on error, instead
-    # of calling on_json_loading_failed. The latter case is undesirable because
-    # it leads to an HTML error message, whereas we want to produce JSON
-    # error messages.
-    request_data = flask.request.get_json(silent = True)
-
-    if request_data == None:
-        raise error.InvalidUsage("No JSON object could be decoded") 
-
-    try:
-        jsonschema.validate(request_data, NEW_PET_REQUEST_SCHEMA)
-    except jsonschema.ValidationError:
-        message = "Your JSON post does not match NEW_PET_REQUEST_SCHEMA."
-        schema = {"NEW_PET_REQUEST_SCHEMA" : NEW_PET_REQUEST_SCHEMA}
-        raise error.InvalidUsage(message, schema) 
+    request_data = validation.validate_json("NEW_PET_REQUEST_SCHEMA",
+        NEW_PET_REQUEST_SCHEMA)
 
     conn = db.get_db(app)
     cursor = conn.cursor()
