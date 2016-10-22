@@ -1,7 +1,7 @@
 {
   "name": "foo",
-  "agility": 0.5,
-  "senses": 0.5,
-  "strength": 0.5,
-  "wit": 0.5
+  "agility": 0.25,
+  "senses": 0.25,
+  "strength": 0.25,
+  "wit": 0.25
 }
