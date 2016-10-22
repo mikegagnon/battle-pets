@@ -5,7 +5,7 @@ import argparse
 import bpcommon
 import flask
 from jsonschema import validate, ValidationError
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, json
 
 app = Flask(__name__)
 
@@ -41,9 +41,7 @@ NEW_PET_REQUEST_SCHEMA = {
 }
 
 # from http://flask.pocoo.org/docs/0.11/patterns/apierrors/
-class InvalidUsage(Exception):
-
-    status_code = 400
+class RestError(Exception):
 
     def __init__(self, message, payload = None):
         Exception.__init__(self)
@@ -54,6 +52,12 @@ class InvalidUsage(Exception):
         d = dict(self.payload or ())
         d['message'] = self.message
         return d
+
+class InvalidUsage(RestError):
+    status_code = 400
+
+class NotFound(RestError):
+    status_code = 404
 
 def init_db():
 
@@ -84,6 +88,7 @@ def get_db():
 
 # from http://flask.pocoo.org/docs/0.11/patterns/apierrors/
 @app.errorhandler(InvalidUsage)
+@app.errorhandler(NotFound)
 def handle_invalid_usage(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
@@ -98,6 +103,7 @@ def close_connection(exception):
 
 # TODO: rename vars
 # TODO: limit animal name length
+# TODO: limit animal attributes
 @app.route("/new-pet", methods=["POST"])
 def new_pet():
 
@@ -144,6 +150,30 @@ def new_pet():
         raise InvalidUsage("A pet with the name '%s' already exists." %
             request_data["name"])
 
+
+@app.route("/get-pet/<string:petname>", methods=["GET"])
+def get_pet(petname):
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT name, strength, agility, wit, senses from " +
+        "Animals where name = ?;", (petname, ))
+
+    data = cursor.fetchone()
+
+    # If this is a new animal
+    if data == None:
+        raise NotFound("A pet with the name '%s' does not exist." % petname)
+    else:
+        response = {
+                "name": data[0],
+                "strength": data[1],
+                "agility": data[2],
+                "wit": data[3],
+                "senses": data[4],
+            }
+        return json.dumps(response)
 
 # TODO: arguments from command line
 if __name__ == "__main__":

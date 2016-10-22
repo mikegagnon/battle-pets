@@ -79,6 +79,34 @@ class ManagementTestCase(unittest.TestCase):
         assert json.loads(response.data)["message"] == \
             "Your JSON post does not match NEW_PET_REQUEST_SCHEMA."
 
+    def test_get_pet_success(self):
+
+        # First, add foo to the database
+        response = self.post_new_pet("foo", 0.5, 0.5, 0.5, 0.5)
+        assert response.status == "200 OK"
+        assert response.data == ""
+
+        # TODO: reorder attributes
+        response = self.app.get("get-pet/foo")
+        assert response.status == "200 OK"
+        assert json.loads(response.data) == {
+                "name": "foo",
+                "agility": 0.5,
+                "senses": 0.5,
+                "strength": 0.5,
+                "wit": 0.5
+            }
+
+    def test_get_pet_failure(self):
+
+        # TODO: reorder attributes
+        response = self.app.get("get-pet/foo")
+
+        assert response.status == "404 NOT FOUND"
+        assert json.loads(response.data) == {
+                "message": "A pet with the name 'foo' does not exist."
+            }
+
 
 if __name__ == '__main__':
     unittest.main()
