@@ -96,9 +96,12 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+def valid_pet_name(petname):
+    return len(petname) <= MAX_PET_NAME_LENGTH
+
 # The sum of the attributes must be <= 1.0
 def valid_new_pet(pet):
-    return  len(pet["name"]) <= MAX_PET_NAME_LENGTH and \
+    return  valid_pet_name(pet["name"]) and \
         (pet["strength"] +
         pet["agility"] +
         pet["wit"] +
@@ -166,7 +169,7 @@ def new_pet():
 @app.route("/get-pet/<string:petname>", methods=["GET"])
 def get_pet(petname):
 
-    if len(petname) > MAX_PET_NAME_LENGTH:
+    if not valid_pet_name(petname):
         message = "The name of the pet must be <= %s" % MAX_PET_NAME_LENGTH
 
         raise InvalidUsage(message)
