@@ -83,35 +83,29 @@ def new_pet():
     # TODO: change data to pet
     data = cursor.fetchone()
 
-    # If this is a new pet
-    if data == None:
-
-        if valid_new_pet(request_data):
-
-            cursor.execute('''
-                INSERT INTO Pets(name, strength, agility, wit, senses)
-                VALUES (?, ?, ?, ?, ?);''',
-                (request_data["name"],
-                request_data["strength"],
-                request_data["agility"],
-                request_data["wit"],
-                request_data["senses"]))
-
-            conn.commit()
-
-            return ''
-
-        else:
-            message = "The sum of (strength, agility, wit, senses) must be " + \
-                "<= 1.0 AND the length of name must be <= %s." % \
-                MAX_PET_NAME_LENGTH
-
-            raise error.InvalidUsage(message)
-
-    else:
+    if data != None:
         raise error.InvalidUsage("A pet with the name '%s' already exists." %
             request_data["name"])
 
+    if not valid_new_pet(request_data):
+        message = "The sum of (strength, agility, wit, senses) must be " + \
+            "<= 1.0 AND the length of name must be <= %s." % \
+            MAX_PET_NAME_LENGTH
+
+        raise error.InvalidUsage(message)
+
+    cursor.execute('''
+        INSERT INTO Pets(name, strength, agility, wit, senses)
+        VALUES (?, ?, ?, ?, ?);''',
+        (request_data["name"],
+        request_data["strength"],
+        request_data["agility"],
+        request_data["wit"],
+        request_data["senses"]))
+
+    conn.commit()
+
+    return ''
 
 @app.route("/get-pet/<string:petname>", methods=["GET"])
 def get_pet(petname):
