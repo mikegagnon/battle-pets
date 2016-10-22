@@ -20,6 +20,8 @@ CONTEST_SCHEMA = {
     }
 }
 
+ONE_DAY = 86400
+
 # from http://flask.pocoo.org/docs/0.11/patterns/sqlite3/
 @app.teardown_appcontext
 def close_connection(exception):
@@ -35,6 +37,8 @@ def handle_error(error):
     response.status_code = error.status_code
     return response
 
+# TODO: do not allow the same pet to battle itself
+# TODO: document
 @app.route("/contest", methods=["POST"])
 def contest():
 
@@ -61,6 +65,9 @@ def contest():
         message = "One or more of the pets you specified do not exist."
         raise error.InvalidUsage(message)
 
+    job = queue.enqueue(battle.do_battle, pets, result_ttl=ONE_DAY, ttl=ONE_DAY)
+
+    return flask.json.dumps(job.id)
 
 # TODO: factor out common code
 if __name__ == "__main__":
