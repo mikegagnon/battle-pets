@@ -10,9 +10,13 @@ def request(args):
 
     response = requests.get(url)
 
-    if response.status_code != 200:
-        sys.stderr.write(str(response.status_code) + "\n")
-        sys.stderr.write(response.text + "\n")
+    if response.status_code == 404:
+        if args.expect_404:
+            sys.exit(0)
+        else:
+            sys.stderr.write(response.text + "\n")
+    elif response.status_code != 200:
+        raise ValueError("Unrecognied response")
     else:
         print response.text
 
@@ -28,6 +32,10 @@ if __name__ == "__main__":
     parser.add_argument('--name', nargs='?',
         help="Name of the pet",
         default="foo", dest="name", type=str)
+
+    parser.add_argument('--expect_404',
+        help="Do not print to std_err if a 4004occurs",
+        default=False, dest="expect_404", action="store_true")
 
     args = parser.parse_args()
 
