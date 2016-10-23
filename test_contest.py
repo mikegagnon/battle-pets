@@ -108,6 +108,5 @@ class ContestTestCase(unittest.TestCase):
         assert response_json["2nd place"] == "bar"
 
 
-
 if __name__ == '__main__':
     unittest.main()
