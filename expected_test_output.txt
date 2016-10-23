@@ -1,0 +1,35 @@
+{"agility": 0.2, "experience": 0, "losses": 0, "name": "Dwebble", "senses": 0.3, "strength": 0.3, "wins": 0, "wit": 0.2}
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+"Charmander"
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+Waiting for contest to finish
+"Blissey"
+[
+    [
+        "Charmander", 
+        "Blissey", 
+        "2016-10-23 21:55:10"
+    ], 
+    [
+        "Blissey", 
+        "Charmander", 
+        "2016-10-23 21:55:11"
+    ]
+]
