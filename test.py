@@ -10,6 +10,17 @@ import battle
 import db
 import management
 
+DEFAULT_PET = battle.BattlePet(
+    name = "foo",
+    strength = 0.25,
+    agility = 0.25,
+    wit = 0.25,
+    senses = 0.25,
+    wins = 0,
+    losses = 0,
+    experience = 0,
+    rowid = 0)
+
 # TODO: put in another file?
 def post_new_pet(app, name, agility, senses, strength, wit):
     request_data = flask.json.dumps(
@@ -261,9 +272,7 @@ class ArenaTestCase(unittest.TestCase):
     def test_arena(self):
         self.submit_contest()
 
-    # TODO: test for database updates
-    # TODO: refactor out common code
-    def test_arena_result(self):
+    def update_pet(self, battlePet):
 
         with arena.app.app_context():
             conn = db.get_db(arena.app)
@@ -271,17 +280,6 @@ class ArenaTestCase(unittest.TestCase):
 
             cursor.execute("SELECT wins, losses, experience FROM Pets where " +
                 "name = ?;", ("foo", ))
-
-            foo_pet = battle.BattlePet(
-                name = "foo",
-                strength = 0.5,
-                agility = 0.25,
-                wit = 0.25,
-                senses = 0.25,
-                wins = 0,
-                losses = 0,
-                experience = 0,
-                rowid = 0)
 
             cursor.execute('''
                 UPDATE Pets
@@ -293,18 +291,18 @@ class ArenaTestCase(unittest.TestCase):
                     losses = ?,
                     experience = ?
                 WHERE name = ?;''',
-                    (foo_pet.attributes["strength"],
-                     foo_pet.attributes["agility"],
-                     foo_pet.attributes["wit"],
-                     foo_pet.attributes["senses"],
-                     foo_pet.wins,
-                     foo_pet.losses,
-                     foo_pet.experience,
-                     foo_pet.name))
+                    (battlePet.attributes["strength"],
+                     battlePet.attributes["agility"],
+                     battlePet.attributes["wit"],
+                     battlePet.attributes["senses"],
+                     battlePet.wins,
+                     battlePet.losses,
+                     battlePet.experience,
+                     battlePet.name))
 
             conn.commit()
 
-
+    def do_test_arena_result(self, winner, loser, winner_xp, loser_xp):
 
         job_id = self.submit_contest()
 
@@ -318,18 +316,30 @@ class ArenaTestCase(unittest.TestCase):
 
         response_json = flask.json.loads(response.data)
 
-        assert response_json == "foo"
+        assert response_json == winner
 
         with arena.app.app_context():
             conn = db.get_db(arena.app)
             cursor = conn.cursor()
 
             cursor.execute("SELECT wins, losses, experience FROM Pets where " +
-                "name = ?;", ("foo", ))
-
+                "name = ?;", (winner, ))
             data = cursor.fetchone()
+            assert data == winner_xp
 
-            assert data == (1, 0, 2)
+            cursor.execute("SELECT wins, losses, experience FROM Pets where " +
+                "name = ?;", (loser, ))
+            data = cursor.fetchone()
+            assert data == loser_xp
+
+    def test_arena_result(self):
+
+        foo_pet = copy.deepcopy(DEFAULT_PET)
+        foo_pet.attributes["strength"] = 0.5
+
+        self.update_pet(foo_pet)
+
+        self.do_test_arena_result("foo", "bar", (1, 0, 2), (0, 1, 1))
 
     def test_arena_result_invalid_jobid(self):
 
@@ -345,22 +355,11 @@ class ArenaTestCase(unittest.TestCase):
 
 class BattleTestCase(unittest.TestCase):
 
-    default_pet = battle.BattlePet(
-            name = "foo",
-            strength = 0.25,
-            agility = 0.25,
-            wit = 0.25,
-            senses = 0.25,
-            wins = 0,
-            losses = 0,
-            experience = 0,
-            rowid = 0)
-
     def test_battle_strength(self):
-        pet1 = copy.deepcopy(BattleTestCase.default_pet)
+        pet1 = copy.deepcopy(DEFAULT_PET)
         pet1.strength = 0.3
 
-        pet2 = copy.deepcopy(BattleTestCase.default_pet)
+        pet2 = copy.deepcopy(DEFAULT_PET)
         pet2.name = "bar"
         pet2.rowid = 1
 
@@ -369,9 +368,9 @@ class BattleTestCase(unittest.TestCase):
         assert result == ("foo", "bar")
 
     def test_battle_agility(self):
-        pet1 = copy.deepcopy(BattleTestCase.default_pet)
+        pet1 = copy.deepcopy(DEFAULT_PET)
 
-        pet2 = copy.deepcopy(BattleTestCase.default_pet)
+        pet2 = copy.deepcopy(DEFAULT_PET)
         pet2.name = "bar"
         pet2.attributes["agility"] = 0.3
         pet2.rowid = 1
@@ -381,9 +380,9 @@ class BattleTestCase(unittest.TestCase):
         assert result == ("bar", "foo")
 
     def test_battle_wit(self):
-        pet1 = copy.deepcopy(BattleTestCase.default_pet)
+        pet1 = copy.deepcopy(DEFAULT_PET)
 
-        pet2 = copy.deepcopy(BattleTestCase.default_pet)
+        pet2 = copy.deepcopy(DEFAULT_PET)
         pet2.name = "bar"
         pet2.attributes["wit"] = 0.3
         pet2.rowid = 1
@@ -393,9 +392,9 @@ class BattleTestCase(unittest.TestCase):
         assert result == ("bar", "foo")
 
     def test_battle_experience(self):
-        pet1 = copy.deepcopy(BattleTestCase.default_pet)
+        pet1 = copy.deepcopy(DEFAULT_PET)
 
-        pet2 = copy.deepcopy(BattleTestCase.default_pet)
+        pet2 = copy.deepcopy(DEFAULT_PET)
         pet2.name = "bar"
         pet2.experience = 1
         pet2.rowid = 1
@@ -412,9 +411,9 @@ class BattleTestCase(unittest.TestCase):
         assert result == ("foo", "bar")
 
     def test_battle_rowid(self):
-        pet1 = copy.deepcopy(BattleTestCase.default_pet)
+        pet1 = copy.deepcopy(DEFAULT_PET)
 
-        pet2 = copy.deepcopy(BattleTestCase.default_pet)
+        pet2 = copy.deepcopy(DEFAULT_PET)
         pet2.name = "bar"
         pet2.rowid = 1
 
