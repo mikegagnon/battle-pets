@@ -332,7 +332,7 @@ class ArenaTestCase(unittest.TestCase):
             data = cursor.fetchone()
             assert data == loser_xp
 
-    def test_arena_result(self):
+    def test_arena_result_foo_wins(self):
 
         foo_pet = copy.deepcopy(DEFAULT_PET)
         foo_pet.attributes["strength"] = 0.5
@@ -340,6 +340,15 @@ class ArenaTestCase(unittest.TestCase):
         self.update_pet(foo_pet)
 
         self.do_test_arena_result("foo", "bar", (1, 0, 2), (0, 1, 1))
+
+    def test_arena_result_bar_wins(self):
+
+        foo_pet = copy.deepcopy(DEFAULT_PET)
+        foo_pet.attributes["strength"] = 0.2
+
+        self.update_pet(foo_pet)
+
+        self.do_test_arena_result("bar", "foo", (1, 0, 2), (0, 1, 1))
 
     def test_arena_result_invalid_jobid(self):
 
