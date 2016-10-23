@@ -44,3 +44,4 @@ TODO
 - is None v. == None
 - take testing off line
 - check for valid input everywhere
+- Test on linux
