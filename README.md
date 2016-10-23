@@ -29,6 +29,7 @@ ERRATA:
 - Redis necessary for test
 
 TODO
+- Hoist string constants somewhere else
 - add more tests as needed
 - breakup functions
 - README

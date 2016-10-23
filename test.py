@@ -205,6 +205,22 @@ class ArenaTestCase(unittest.TestCase):
         assert flask.json.loads(response.data)["message"] == \
             "Your JSON post does not match CONTEST_SCHEMA."
 
+    # TODO: hoist string constants
+    def test_arena_fail_missing_pet(self):
+        request_data = {
+                "name1": "foo",
+                "name2": "pickle",
+                "category": "strength"
+            }
+
+        response = self.app.post('/arena', data=flask.json.dumps(request_data),
+            content_type='application/json')
+
+        assert response.status == "400 BAD REQUEST"
+        assert flask.json.loads(response.data)["message"] == \
+            "One or more of the pets you specified do not exist, or " + \
+            "you have specified that the same pet fight itself"
+
     # A pet cannot fight itself
     def test_arena_fail_fight_self(self):
         request_data = {
