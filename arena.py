@@ -1,6 +1,5 @@
 import argparse
 import flask
-import jsonschema
 import redis
 import rq
 
