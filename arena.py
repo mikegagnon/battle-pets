@@ -98,7 +98,6 @@ def arena_result(jobid):
     return flask.json.dumps(job.result)
 
 
-# TODO: factor out common code
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(prog='management.py')
