@@ -271,8 +271,7 @@ class ArenaTestCase(unittest.TestCase):
 
         response_json = flask.json.loads(response.data)
 
-        assert response_json["victor"] == "foo"
-        assert response_json["2nd place"] == "bar"
+        assert response_json == "foo"
 
 class BattleTestCase(unittest.TestCase):
 

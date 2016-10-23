@@ -95,7 +95,7 @@ def arena_result(jobid):
     if job.result == None:
         raise error.Processing("The server is still processing this battle.")
 
-    return flask.json.dumps(job.result)
+    return flask.json.dumps(job.result["victor"])
 
 
 if __name__ == "__main__":
