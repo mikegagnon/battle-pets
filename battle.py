@@ -1,10 +1,6 @@
 import sqlite3
 import time
 
-# TODO: exceptions?
-# TODO: document
-# TODO: does battle or contest update the db?
-
 class BattlePet():
 
     # TODO: take actual arguments in stead of pet_record
