@@ -317,6 +317,16 @@ class BattleTestCase(unittest.TestCase):
                 "2nd place": "foo"
             }
 
+        pet1.experience = 1
+        pet2.experience = 0
+
+        result = battle.do_battle(pet1, pet2, "senses", 0.0)
+
+        assert result == {
+                "victor": "foo",
+                "2nd place": "bar"
+            }
+
 
         
 if __name__ == '__main__':
