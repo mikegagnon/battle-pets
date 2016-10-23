@@ -138,7 +138,7 @@ def get_pet(petname):
 
     return flask.json.dumps(response)
 
-# TODO: arguments from command line
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(prog='management.py')
