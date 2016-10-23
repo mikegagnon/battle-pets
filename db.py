@@ -15,7 +15,10 @@ def init_db(app):
                  strength REAL,
                  agility REAL,
                  wit REAL,
-                 senses REAL)''')
+                 senses REAL,
+                 wins INT,
+                 losses INT,
+                 experience INT)''')
 
     conn.commit()
 

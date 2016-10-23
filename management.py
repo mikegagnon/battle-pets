@@ -94,13 +94,15 @@ def new_pet():
         raise error.InvalidUsage(message)
 
     cursor.execute('''
-        INSERT INTO Pets(name, strength, agility, wit, senses)
-        VALUES (?, ?, ?, ?, ?);''',
+        INSERT INTO Pets(name, strength, agility, wit, senses, wins, losses,
+            experience)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?);''',
         (request_data["name"],
         request_data["strength"],
         request_data["agility"],
         request_data["wit"],
-        request_data["senses"]))
+        request_data["senses"],
+        0, 0, 0))
 
     conn.commit()
 
@@ -117,8 +119,8 @@ def get_pet(petname):
     conn = db.get_db(app)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT name, strength, agility, wit, senses FROM " +
-        "Pets where name = ?;", (petname, ))
+    cursor.execute("SELECT name, strength, agility, wit, senses, wins, " +
+        "losses, experience FROM Pets where name = ?;", (petname, ))
 
     data = cursor.fetchone()
 
@@ -132,6 +134,9 @@ def get_pet(petname):
                 "agility": data[2],
                 "wit": data[3],
                 "senses": data[4],
+                "wins": data[5],
+                "losses": data[6],
+                "experience": data[7]
             }
         return flask.json.dumps(response)
 

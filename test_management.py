@@ -120,6 +120,9 @@ class ManagementTestCase(unittest.TestCase):
                 "agility": 0.25,
                 "wit": 0.25,
                 "senses": 0.25,
+                "wins": 0,
+                "losses": 0,
+                "experience": 0,
             }
 
     def test_get_pet_failure(self):
