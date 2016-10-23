@@ -2,6 +2,7 @@
 # TODO: cleanup imports
 from flask import json
 import os
+import copy
 import management
 import unittest
 import tempfile
@@ -245,11 +246,10 @@ class ContestTestCase(unittest.TestCase):
 
 class BattleTestCase(unittest.TestCase):
 
-    def test_battle(self):
-        pet1 = battle.BattlePet(
+    default_pet = battle.BattlePet(
             name = "foo",
-            strength = 0.3,
-            agility = 0.2,
+            strength = 0.25,
+            agility = 0.25,
             wit = 0.25,
             senses = 0.25,
             wins = 0,
@@ -257,18 +257,20 @@ class BattleTestCase(unittest.TestCase):
             experience = 0,
             rowid = 0)
 
-        pet2 = battle.BattlePet(
-            name = "foo",
-            strength = 0.2,
-            agility = 0.3,
-            wit = 0.25,
-            senses = 0.25,
-            wins = 0,
-            losses = 0,
-            experience = 1,
-            rowid = 1)
+    def test_battle_strength(self):
+        pet1 = copy.deepcopy(BattleTestCase.default_pet)
+        pet1.strength = 0.3
 
-        battle.do_battle(pet1, pet2, "strength", 0.0)
+        pet2 = copy.deepcopy(BattleTestCase.default_pet)
+        pet2.name = "bar"
+        pet2.rowid = 1
+
+        result = battle.do_battle(pet1, pet2, "strength", 0.0)
+
+        assert result == {
+                "victor": "foo",
+                "2nd place": "bar"
+            }
         
 if __name__ == '__main__':
     unittest.main()
