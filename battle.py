@@ -5,13 +5,6 @@ import time
 # TODO: document
 # TODO: does battle or contest update the db?
 
-SLEEP_TIME_BATTLE = 0.2
-
-
-# Defined by argparse
-# TODO: set to None
-DB_FILENAME = "database.db"
-
 class BattlePet():
 
     # TODO: take actual arguments in stead of pet_record
@@ -32,9 +25,9 @@ class BattlePet():
         self.experience = experience
         self.rowid = rowid
 
-def do_battle(pet1, pet2, category):
+def do_battle(pet1, pet2, category, sleep_time_battle):
 
-    time.sleep(SLEEP_TIME_BATTLE)
+    time.sleep(sleep_time_battle)
 
     result = {}
 
@@ -72,10 +65,10 @@ def do_battle(pet1, pet2, category):
     return result
 
 # TODO: document
-def do_battle_db(pet1, pet2, category):
-    result = do_battle(pet1, pet2, category)
+def do_battle_db(pet1, pet2, category, sleep_time_battle, db_filename):
+    result = do_battle(pet1, pet2, category, sleep_time_battle)
 
-    conn = sqlite3.connect(DB_FILENAME)
+    conn = sqlite3.connect(db_filename)
 
     cursor = conn.cursor()
 

@@ -12,6 +12,7 @@ import test_management
 
 import time
 
+BATTLE_TIME = 0.2
 POLL_SLEEP_TIME = 0.1
 
 # from http://flask.pocoo.org/docs/0.11/testing/
@@ -20,6 +21,8 @@ class ContestTestCase(unittest.TestCase):
 
     def setUp(self):
         self.db_fd, contest.app.config['DATABASE'] = tempfile.mkstemp()
+        contest.app.config['BATTLE_TIME'] = BATTLE_TIME
+
         contest.app.config['TESTING'] = True
         self.app = contest.app.test_client()
         self.app.debug = True

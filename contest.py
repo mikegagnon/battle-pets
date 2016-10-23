@@ -75,7 +75,8 @@ def contest():
     pet2 = battlePetFromRow(pets[1])
 
     job = queue.enqueue(battle.do_battle_db, pet1, pet2,
-        request_data["category"], result_ttl=ONE_DAY, ttl=ONE_DAY)
+        request_data["category"], app.config['BATTLE_TIME'],
+        app.config['DATABASE'], result_ttl=ONE_DAY, ttl=ONE_DAY)
 
     return flask.json.dumps(job.id)
 
@@ -102,8 +103,13 @@ if __name__ == "__main__":
     parser.add_argument('--port', nargs='?', help="The port to run the " + \
         "server on", default=5001, dest="port", type=int)
 
+    parser.add_argument('--battle_time', nargs='?',
+        help="Length of time (in seconds) for each battle",
+        default=1, dest="battle_time", type=float)
+
     args = parser.parse_args()
 
     app.config['DATABASE'] = args.database_filename
+    app.config['BATTLE_TIME'] = args.battle_time
 
     app.run("0.0.0.0", args.port)
