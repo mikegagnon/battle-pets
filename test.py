@@ -11,9 +11,6 @@ import db
 import contest
 import battle
 
-BATTLE_TIME = 0.2
-POLL_SLEEP_TIME = 0.1
-
 # TODO: put in another file?
 def post_new_pet(app, name, agility, senses, strength, wit):
     request_data = json.dumps(
@@ -152,9 +149,12 @@ class ManagementTestCase(unittest.TestCase):
 
 class ContestTestCase(unittest.TestCase):
 
+    BATTLE_TIME = 0.2
+    POLL_SLEEP_TIME = 0.1
+
     def setUp(self):
         self.db_fd, contest.app.config['DATABASE'] = tempfile.mkstemp()
-        contest.app.config['BATTLE_TIME'] = BATTLE_TIME
+        contest.app.config['BATTLE_TIME'] = ContestTestCase.BATTLE_TIME
 
         contest.app.config['TESTING'] = True
         self.app = contest.app.test_client()
@@ -232,7 +232,7 @@ class ContestTestCase(unittest.TestCase):
         response = self.app.get('/contest-result/' + job_id)
 
         while response.status == "102 PROCESSING":
-            time.sleep(POLL_SLEEP_TIME)
+            time.sleep(ContestTestCase.POLL_SLEEP_TIME)
             response = self.app.get('/contest-result/' + job_id)
 
         assert response.status != "500 INTERNAL SERVER ERROR"
