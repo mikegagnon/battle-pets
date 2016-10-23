@@ -19,7 +19,13 @@ def init_db(app):
                  senses REAL,
                  wins INT,
                  losses INT,
-                 experience INT)''')
+                 experience INT);''')
+
+    cursor.execute('''CREATE TABLE History
+                 (name1 TEXT,
+                  name2 TEXT,
+                  victor TEXT,
+                  battletime DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL);''')
 
     conn.commit()
 
