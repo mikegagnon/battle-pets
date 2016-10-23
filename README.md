@@ -43,4 +43,4 @@ TODO
 - More interesting battles
 - is None v. == None
 - take testing off line
-- check for valid petnames everywhere
+- check for valid input everywhere
