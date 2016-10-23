@@ -65,7 +65,6 @@ def valid_new_pet(pet):
         pet["wit"] +
         pet["senses"]) <= 1.0
 
-# TODO: get rid of nested ifs
 @app.route("/new-pet", methods=["POST"])
 def new_pet():
 
