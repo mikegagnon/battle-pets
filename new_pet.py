@@ -20,9 +20,13 @@ def request(args):
 
     if response.status_code != 200:
         sys.stderr.write(str(response.status_code) + "\n")
-        sys.stderr.write(response.text + "\n")
-    else:
-        print response.text
+        sys.stderr.write(response.text)
+        sys.stderr.flush()
+
+        sys.exit(1)
+
+    sys.stdout.write(response.text,)
+    sys.stdout.flush()
 
 
 if __name__ == "__main__":
