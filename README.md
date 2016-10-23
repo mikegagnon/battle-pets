@@ -1,3 +1,8 @@
+# Battle Pets
+by Michael Gagnon
+
+## Installation
+
 pip install Flask
 pip install jsonschema
 pip install redis
@@ -9,6 +14,113 @@ cd redis-stable
 make
 make install
 pip install requests
+
+## Tests
+
+First you need to fire up Redis and an RQ worker:
+
+```bash
+$ redis-server
+$ rq worker
+```
+
+### Unit tests
+
+```bash
+$ python test.py
+```
+
+### Live system test
+
+First, fire up the services:
+
+```bash
+$ python management.py
+$ python arena.py
+```
+
+Then run the test:
+
+```bash
+$ ./test.sh
+```
+
+The output should look something like `expected_test_output.txt`, but it won't be an exact match because of timestamps.
+
+## Command-line tools
+
+### `new_pet.py`
+
+Creates a new pet.
+
+```
+$ python new_pet.py -h
+usage: new_pet.py [-h] [--url [URL]] [--name [NAME]] [--strength [STRENGTH]]
+                  [--agility [AGILITY]] [--wit [WIT]] [--senses [SENSES]]
+                  [--expect_400]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --url [URL]           The URL of the Management service
+  --name [NAME]         Name of the pet
+  --strength [STRENGTH]
+                        Strength of the pet
+  --agility [AGILITY]   Agility of the pet
+  --wit [WIT]           Wit of the pet
+  --senses [SENSES]     Senses of the pet
+  --expect_400          Do not print to std_err if a 400 occurs
+```
+
+### `get_pet.py`
+
+Retrieves information about a pet.
+
+```
+$ ./get_pet.py -h
+usage: new_pet.py [-h] [--url [URL]] [--name [NAME]] [--expect_404]
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --url [URL]    The URL of the Management service
+  --name [NAME]  Name of the pet
+  --expect_404   Do not print to std_err if a 4004occurs
+```
+
+### `contest.py`
+
+Initiates a battle between two pets.
+By default, `contest.py` blocks until the contest has completed.
+
+```
+$ ./contest.py -h
+usage: new_pet.py [-h] [--url [URL]] [--name1 [NAME1]] [--name2 [NAME2]]
+                  [--category [CATEGORY]] [--unblock] [--expect_400]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --url [URL]           The URL of the Arena service
+  --name1 [NAME1]       Name of the pet to battle
+  --name2 [NAME2]       Name of the pet to battle
+  --category [CATEGORY]
+                        Category of battle. Must be one of: strength, agility,
+                        wit, senses
+  --unblock             Do not wait for the battle to finish
+  --expect_400          Expect a 400 error
+```
+
+### `history.py`
+
+```
+$ ./history.py -h
+usage: new_pet.py [-h] [--url [URL]]
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --url [URL]  The URL of the Arena service
+```
+
+
+## Bottom
 
 ERRATA:
 
