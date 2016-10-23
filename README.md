@@ -26,6 +26,7 @@ ERRATA:
 - db connection in battle
 - testing for failed jobs
 - didn't use git branch
+- Redis necessary for test
 
 TODO
 - test_battle
