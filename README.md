@@ -31,21 +31,12 @@ ERRATA:
 - Server error messages not conventional
 - TDD
 
-TODO
-- Use ''' instead of "" + \
-- Hoist string constants somewhere else
-- add more tests as needed
-- breakup functions
+TODO high priority
 - README
 - Internal documentation
-- Tool suite for production use
-- Uncoil unnecessary test dependencies
+- Usage test
+- Test on linux
+
+TODO low priority
 - Training interface: reports the most high value matches
 - Leader board
-- History of past battles
-- More interesting battles
-- is None v. == None
-- take testing off line
-- check for valid input everywhere
-- Test on linux
-- rename BATTLE_TIME
