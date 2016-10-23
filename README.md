@@ -31,6 +31,7 @@ ERRATA:
 - TDD
 
 TODO
+- Use ''' instead of "" + \
 - Hoist string constants somewhere else
 - add more tests as needed
 - breakup functions
