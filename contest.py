@@ -19,10 +19,15 @@ def request(args):
     response = requests.post(args.url + "/arena", data=json.dumps(data),
         headers = {'content-type': 'application/json'})
 
+    if response.status_code == 400:
+        if args.expect_400:
+            sys.exit(0)
+        else:
+            sys.stderr.write(str(response.status_code) + "\n")
+            sys.stderr.write(response.text)
+            sys.exit(1)
     if response.status_code != 200:
-        sys.stderr.write(str(response.status_code) + "\n")
-        sys.stderr.write(response.text)
-        sys.exit(1)
+        raise ValueError("Unexpected failure")
 
     if args.block:
 
@@ -65,6 +70,10 @@ if __name__ == "__main__":
     parser.add_argument('--unblock',
         help="Do not wait for the battle to finish",
         default=False, dest="unblock", action="store_true")
+
+    parser.add_argument('--expect_400',
+        help="Expect a 400 error",
+        default=False, dest="expect_400", action="store_true")
 
     args = parser.parse_args()
 
