@@ -273,6 +273,18 @@ class ArenaTestCase(unittest.TestCase):
 
         assert response_json == "foo"
 
+    def test_arena_result_invalid_jobid(self):
+
+        response = self.app.get('/arena-result/invalid-id')
+
+        assert response.status == "404 NOT FOUND"
+
+        response_json = flask.json.loads(response.data)
+
+        assert response_json == {
+            "message": "Could not find a contest for that job ID"
+        }
+
 class BattleTestCase(unittest.TestCase):
 
     default_pet = battle.BattlePet(

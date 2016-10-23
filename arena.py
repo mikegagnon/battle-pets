@@ -44,6 +44,7 @@ def close_connection(exception):
 @app.errorhandler(error.InvalidUsage)
 @app.errorhandler(error.Processing)
 @app.errorhandler(error.InternalServerError)
+@app.errorhandler(error.NotFound)
 def handle_error(error):
     response = flask.jsonify(error.to_dict())
     response.status_code = error.status_code
@@ -86,7 +87,11 @@ def arena():
 @app.route("/arena-result/<string:jobid>", methods=["GET"])
 def arena_result(jobid):
 
-    if failed_queue.fetch_job(jobid).is_failed:
+    failed_job = failed_queue.fetch_job(jobid)
+
+    if failed_job == None:
+        raise error.NotFound("Could not find a contest for that job ID")
+    elif failed_job.is_failed:
         raise error.InternalServerError("There was an error in the server. " +
             "The job has failed.")
 
