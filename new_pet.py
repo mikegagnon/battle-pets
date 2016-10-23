@@ -27,7 +27,6 @@ def request(args):
             sys.exit(1)
 
     elif response.status_code != 200:
-        print response.status_code
         raise ValueError("Unrecognied response")
 
     sys.stdout.write(response.text,)
