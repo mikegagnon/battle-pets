@@ -286,6 +286,21 @@ class BattleTestCase(unittest.TestCase):
                 "victor": "bar",
                 "2nd place": "foo"
             }
+
+    def test_battle_wit(self):
+        pet1 = copy.deepcopy(BattleTestCase.default_pet)
+
+        pet2 = copy.deepcopy(BattleTestCase.default_pet)
+        pet2.name = "bar"
+        pet2.attributes["wit"] = 0.3
+        pet2.rowid = 1
+
+        result = battle.do_battle(pet1, pet2, "wit", 0.0)
+
+        assert result == {
+                "victor": "bar",
+                "2nd place": "foo"
+            }
         
 if __name__ == '__main__':
     unittest.main()
