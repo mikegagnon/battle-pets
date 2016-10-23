@@ -2,19 +2,24 @@
 by Michael Gagnon
 
 ## Installation
+These are the installation commands I needed to use to setup Battle Pets on a fresh install of Ubuntu.16.04.1
 
+```
+download https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+
+pip install requests
 pip install Flask
 pip install jsonschema
 pip install redis
 pip install rq
 
-wget http://download.redis.io/redis-stable.tar.gz
+download http://download.redis.io/redis-stable.tar.gz
 tar xvzf redis-stable.tar.gz
 cd redis-stable
 make
 make install
-pip install requests
-
+```
 ## Tests
 
 First you need to fire up Redis and an RQ worker:
