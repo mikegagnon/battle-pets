@@ -43,4 +43,4 @@ TODO
 - History of past battles
 - More interesting battles
 - is None v. == None
-
+- take testing off line
