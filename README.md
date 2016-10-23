@@ -47,3 +47,4 @@ TODO
 - take testing off line
 - check for valid input everywhere
 - Test on linux
+- rename BATTLE_TIME
