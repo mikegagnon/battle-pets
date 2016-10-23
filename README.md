@@ -2,7 +2,7 @@
 by Michael Gagnon
 
 ## Installation
-These are the installation commands I needed to use to setup Battle Pets on a fresh install of Ubuntu.16.04.1
+These are the installation commands I used setup Battle Pets on a fresh install of Ubuntu.16.04.1
 
 ```
 download https://bootstrap.pypa.io/get-pip.py
