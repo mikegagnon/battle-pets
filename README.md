@@ -27,7 +27,6 @@ ERRATA:
 - testing for failed jobs
 
 TODO
-- Put all tests in one file?
 - test_battle
 - add more tests as needed
 - breakup functions
