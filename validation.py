@@ -3,6 +3,7 @@ import jsonschema
 
 import error
 
+# TODO: move lask.request.get_json(silent = True) into caller, not here
 def validate_json(schema_name, schema):
 
     # Setting silent=True causes get_json to return None on error, instead
