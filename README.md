@@ -35,7 +35,6 @@ TODO
 - Internal documentation
 - Tool suite for production use
 - Uncoil unnecessary test dependencies
-- cleanup imports
 - Training interface: reports the most high value matches
 - Leader board
 - History of past battles
