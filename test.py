@@ -262,7 +262,50 @@ class ArenaTestCase(unittest.TestCase):
         self.submit_contest()
 
     # TODO: test for database updates
+    # TODO: refactor out common code
     def test_arena_result(self):
+
+        with arena.app.app_context():
+            conn = db.get_db(arena.app)
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT wins, losses, experience FROM Pets where " +
+                "name = ?;", ("foo", ))
+
+            foo_pet = battle.BattlePet(
+                name = "foo",
+                strength = 0.5,
+                agility = 0.25,
+                wit = 0.25,
+                senses = 0.25,
+                wins = 0,
+                losses = 0,
+                experience = 0,
+                rowid = 0)
+
+            cursor.execute('''
+                UPDATE Pets
+                SET strength = ?,
+                    agility = ?,
+                    wit = ?,
+                    senses = ?,
+                    wins = ?,
+                    losses = ?,
+                    experience = ?
+                WHERE name = ?;''',
+                    (foo_pet.attributes["strength"],
+                     foo_pet.attributes["agility"],
+                     foo_pet.attributes["wit"],
+                     foo_pet.attributes["senses"],
+                     foo_pet.wins,
+                     foo_pet.losses,
+                     foo_pet.experience,
+                     foo_pet.name))
+
+            conn.commit()
+
+
+
         job_id = self.submit_contest()
 
         response = self.app.get('/arena-result/' + job_id)
