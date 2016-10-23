@@ -1,20 +1,18 @@
-
-# TODO: cleanup imports
-from flask import json
-import os
 import copy
-import management
-import unittest
+import flask
+import os
 import tempfile
 import time
+import unittest
 
-import db
 import arena
 import battle
+import db
+import management
 
 # TODO: put in another file?
 def post_new_pet(app, name, agility, senses, strength, wit):
-    request_data = json.dumps(
+    request_data = flask.json.dumps(
         {
           "name": name,
           "strength": strength,
@@ -53,7 +51,7 @@ class ManagementTestCase(unittest.TestCase):
         # This fails because there is already a pet named foo
         response = post_new_pet(self.app, "foo", 0.25, 0.25, 0.25, 0.25)
         assert response.status == "400 BAD REQUEST"
-        assert json.loads(response.data) == {
+        assert flask.json.loads(response.data) == {
                 "message": "A pet with the name 'foo' already exists."
             }
 
@@ -65,13 +63,13 @@ class ManagementTestCase(unittest.TestCase):
             content_type='application/json')
 
         assert response.status == "400 BAD REQUEST"
-        assert json.loads(response.data) == {
+        assert flask.json.loads(response.data) == {
                 "message": "No JSON object could be decoded"
             }
 
     def test_new_pet_bad_schema(self):
 
-        request_data = json.dumps(
+        request_data = flask.json.dumps(
             {
               "name": "foo"
             })
@@ -81,14 +79,14 @@ class ManagementTestCase(unittest.TestCase):
             content_type='application/json')
 
         assert response.status == "400 BAD REQUEST"
-        assert json.loads(response.data)["message"] == \
+        assert flask.json.loads(response.data)["message"] == \
             "Your JSON post does not match NEW_PET_REQUEST_SCHEMA."
 
     def test_new_pet_bad_attributes(self):
 
         response = post_new_pet(self.app, "foo", 0.25, 0.25, 0.25, 0.2500001)
         assert response.status == "400 BAD REQUEST"
-        assert json.loads(response.data)["message"] == \
+        assert flask.json.loads(response.data)["message"] == \
             "The sum of (strength, agility, wit, senses) must be <= 1.0 " + \
             "AND the length of name must be <= %s." % \
             management.MAX_PET_NAME_LENGTH
@@ -97,7 +95,7 @@ class ManagementTestCase(unittest.TestCase):
         length = 1 + management.MAX_PET_NAME_LENGTH
         response = post_new_pet(self.app, "X" * length, 0.2, 0.2, 0.2, 0.2)
         assert response.status == "400 BAD REQUEST"
-        assert json.loads(response.data)["message"] == \
+        assert flask.json.loads(response.data)["message"] == \
             "The sum of (strength, agility, wit, senses) must be <= 1.0 " + \
             "AND the length of name must be <= %s." % \
             management.MAX_PET_NAME_LENGTH
@@ -118,7 +116,7 @@ class ManagementTestCase(unittest.TestCase):
 
         response = self.app.get("get-pet/foo")
         assert response.status == "200 OK"
-        assert json.loads(response.data) == {
+        assert flask.json.loads(response.data) == {
                 "name": "foo",
                 "strength": 0.25,
                 "agility": 0.25,
@@ -134,7 +132,7 @@ class ManagementTestCase(unittest.TestCase):
         response = self.app.get("get-pet/foo")
 
         assert response.status == "404 NOT FOUND"
-        assert json.loads(response.data) == {
+        assert flask.json.loads(response.data) == {
                 "message": "A pet with the name 'foo' does not exist."
             }
 
@@ -189,7 +187,7 @@ class ArenaTestCase(unittest.TestCase):
             content_type='application/json')
 
         assert response.status == "400 BAD REQUEST"
-        assert json.loads(response.data) == {
+        assert flask.json.loads(response.data) == {
                 "message": "No JSON object could be decoded"
             }
 
@@ -200,11 +198,11 @@ class ArenaTestCase(unittest.TestCase):
                 "category": "this will cause an error"
             }
 
-        response = self.app.post('/arena', data=json.dumps(request_data),
+        response = self.app.post('/arena', data=flask.json.dumps(request_data),
             content_type='application/json')
 
         assert response.status == "400 BAD REQUEST"
-        assert json.loads(response.data)["message"] == \
+        assert flask.json.loads(response.data)["message"] == \
             "Your JSON post does not match CONTEST_SCHEMA."
 
     def submit_contest(self):
@@ -214,12 +212,12 @@ class ArenaTestCase(unittest.TestCase):
                 "category": "strength"
             }
 
-        response = self.app.post('/arena', data=json.dumps(request_data),
+        response = self.app.post('/arena', data=flask.json.dumps(request_data),
             content_type='application/json')
 
         assert response.status == "200 OK"
 
-        job_id = json.loads(response.data)
+        job_id = flask.json.loads(response.data)
         assert len(job_id) == 36
 
         return job_id
@@ -239,7 +237,7 @@ class ArenaTestCase(unittest.TestCase):
 
         assert response.status != "500 INTERNAL SERVER ERROR"
 
-        response_json = json.loads(response.data)
+        response_json = flask.json.loads(response.data)
 
         assert response_json["victor"] == "foo"
         assert response_json["2nd place"] == "bar"

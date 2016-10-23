@@ -1,7 +1,5 @@
 import argparse
 import flask
-import jsonschema
-import sqlite3
 
 import db
 import error
