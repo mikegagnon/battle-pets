@@ -24,7 +24,7 @@ ERRATA:
 - No security built in
 - Using polling instead of callbacks
 - db connection in battle
-- handling failed jobs
+- testing for failed jobs
 
 TODO
 - Put all tests in one file?
