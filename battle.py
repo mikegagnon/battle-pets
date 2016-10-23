@@ -21,7 +21,6 @@ class BattlePet():
         self.experience = experience
         self.rowid = rowid
 
-# TODO: return just string with victor?
 def do_battle(pet1, pet2, category, sleep_time_battle):
 
     time.sleep(sleep_time_battle)
