@@ -48,6 +48,17 @@ class ContestTestCase(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(contest.app.config['DATABASE'])
 
+    def test_contest_no_json(self):
+        request_data = "this is not json"
+
+        response = self.app.post('/contest', data=request_data,
+            content_type='application/json')
+
+        assert response.status == "400 BAD REQUEST"
+        assert json.loads(response.data) == {
+                "message": "No JSON object could be decoded"
+            }
+
     def test_contest_and_result(self):
         request_data = {
                 "name1": "foo",
@@ -68,6 +79,13 @@ class ContestTestCase(unittest.TestCase):
         while response.status == "102 PROCESSING":
             time.sleep(POLL_SLEEP_TIME)
             response = self.app.get('/contest-result/' + job_id)
+
+        response_json = json.loads(response.data)
+
+        assert response_json["victor"] == "foo"
+        assert response_json["2nd place"] == "bar"
+
+
 
 if __name__ == '__main__':
     unittest.main()
