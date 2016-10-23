@@ -27,6 +27,7 @@ ERRATA:
 - testing for failed jobs
 - didn't use git branch
 - Redis necessary for test
+- Server error messages not conventional
 
 TODO
 - Hoist string constants somewhere else
