@@ -45,8 +45,12 @@ class ContestTestCase(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(contest.app.config['DATABASE'])
 
-    def test_contest(self):
-        request_data = ["foo", "bar"]
+    def test_contest_and_result(self):
+        request_data = {
+                "name1": "foo",
+                "name2": "bar",
+                "category": "strength"
+            }
 
         response = self.app.post('/contest', data=json.dumps(request_data),
             content_type='application/json')

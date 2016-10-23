@@ -14,10 +14,19 @@ app = flask.Flask(__name__)
 queue = rq.Queue(connection=redis.Redis())
 
 CONTEST_SCHEMA = {
-    "type": "array",
-    "items": {
-        "type": "string"
-    }
+    "type": "object",
+    "properties": {
+        "name1": {
+            "type": "string"
+        },
+        "name2": {
+            "type": "string"
+        },
+        "category": {
+            "enum": ["strength", "agility", "wit", "senses"]
+        }
+    },
+    "required": ["name1", "name2", "category"]
 }
 
 ONE_DAY = 86400
@@ -45,31 +54,28 @@ def contest():
 
     request_data = validation.validate_json("CONTEST_SCHEMA", CONTEST_SCHEMA)
 
-    assert(type(request_data) is list)
-
-    if len(request_data) != 2:
-        message = "The request must be a JSON array with two pet names."
-        raise error.InvalidUsage(message)
-
     conn = db.get_db(app)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT name, strength, agility, wit, senses FROM Pets " + \
-        "WHERE name = ? or name = ?;",
-        (request_data[0], request_data[1]))
+    cursor.execute("SELECT name, strength, agility, wit, senses, wins, " +
+        "losses, experience, rowid FROM Pets WHERE name = ? or name = ?;",
+        (request_data["name1"], request_data["name2"]))
 
-    # TODO: change data to pet
     pets = cursor.fetchall()
 
-    # TODO: find which petname(s) is/are missing
     if len(pets) != 2:
         message = "One or more of the pets you specified do not exist."
         raise error.InvalidUsage(message)
 
-    job = queue.enqueue(battle.do_battle, pets, result_ttl=ONE_DAY, ttl=ONE_DAY)
+    pet1 = battle.BattlePet(pets[0])
+    pet2 = battle.BattlePet(pets[1])
+
+    job = queue.enqueue(battle.do_battle, pet1, pet2, request_data["category"],
+        result_ttl=ONE_DAY, ttl=ONE_DAY)
 
     return flask.json.dumps(job.id)
 
+# TODO: robust error checking
 @app.route("/contest-result/<string:jobid>", methods=["GET"])
 def contest_result(jobid):
 
