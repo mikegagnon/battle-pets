@@ -2,6 +2,7 @@ import argparse
 import flask
 import sqlite3
 
+# TODO: rm
 app = flask.Flask(__name__)
 
 def init_db(app):
