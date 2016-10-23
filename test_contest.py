@@ -73,7 +73,7 @@ class ContestTestCase(unittest.TestCase):
         assert json.loads(response.data)["message"] == \
             "Your JSON post does not match CONTEST_SCHEMA."
 
-    def test_contest_and_result(self):
+    def submit_contest(self):
         request_data = {
                 "name1": "foo",
                 "name2": "bar",
@@ -87,6 +87,14 @@ class ContestTestCase(unittest.TestCase):
 
         job_id = json.loads(response.data)
         assert len(job_id) == 36
+
+        return job_id
+
+    def test_contest(self):
+        self.submit_contest()
+
+    def test_contest_result(self):
+        job_id = self.submit_contest()
 
         response = self.app.get('/contest-result/' + job_id)
 
