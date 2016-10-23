@@ -193,6 +193,9 @@ In similar reasoning for my choice for Flask, I chose RQ and Redis
 to handle the contest workers and the queue. RQ markets itself as
 "simple job queues."
 
+I chose to use JSON as the communcation protcol because it is easy to
+work with and is well supported by Python and Flask.
+
 ## Bottom
 
 ERRATA:
