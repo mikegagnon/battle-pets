@@ -188,6 +188,11 @@ class ArenaTestCase(unittest.TestCase):
                     wins, losses, experience)
                 VALUES ("bar", 0.25, 0.25, 0.25, 0.25, 0, 0, 0);''')
 
+            cursor.execute('''
+                INSERT INTO Pets(name, strength, agility, wit, senses,
+                    wins, losses, experience)
+                VALUES ("pickle", 0.3, 0.2, 0.25, 0.25, 0, 0, 0);''')
+
             conn.commit()
 
 
@@ -224,7 +229,7 @@ class ArenaTestCase(unittest.TestCase):
     def test_arena_fail_missing_pet(self):
         request_data = {
                 "name1": "foo",
-                "name2": "pickle",
+                "name2": "bad-name",
                 "category": "strength"
             }
 
@@ -252,10 +257,10 @@ class ArenaTestCase(unittest.TestCase):
             "One or more of the pets you specified do not exist, or " + \
             "you have specified that the same pet fight itself"
 
-    def submit_contest(self):
+    def submit_contest(self, petname1="foo", petname2="bar"):
         request_data = {
-                "name1": "foo",
-                "name2": "bar",
+                "name1": petname1,
+                "name2": petname2,
                 "category": "strength"
             }
 
@@ -392,23 +397,24 @@ class ArenaTestCase(unittest.TestCase):
 
     def test_history(self):
 
-        job_id = self.submit_contest()
+        job_id = self.submit_contest("foo", "bar")
         self.assert_result(job_id, "foo")
 
         time.sleep(0)
 
-        job_id = self.submit_contest()
-        self.assert_result(job_id, "foo")
+        job_id = self.submit_contest("foo", "pickle")
+        self.assert_result(job_id, "pickle")
 
         response = self.app.get("/history")
 
         [(victor1, loser1, timestamp1),
          (victor2, loser2, timestamp2)] = flask.json.loads(response.data)
 
-        assert victor1 == victor2 and victor1 == "foo"
-        assert loser1 == loser2 and loser2 == "bar"
+        assert victor1 == "foo"
+        assert victor2 == "pickle"
 
-
+        assert loser1 == "bar"
+        assert loser2 == "foo"
 
 class BattleTestCase(unittest.TestCase):
 
