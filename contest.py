@@ -70,8 +70,8 @@ def contest():
     pet1 = battle.BattlePet(pets[0])
     pet2 = battle.BattlePet(pets[1])
 
-    job = queue.enqueue(battle.do_battle, pet1, pet2, request_data["category"],
-        result_ttl=ONE_DAY, ttl=ONE_DAY)
+    job = queue.enqueue(battle.do_battle_db, pet1, pet2,
+        request_data["category"], result_ttl=ONE_DAY, ttl=ONE_DAY)
 
     return flask.json.dumps(job.id)
 
