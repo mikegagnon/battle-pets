@@ -15,7 +15,15 @@ import time
 BATTLE_TIME = 0.2
 POLL_SLEEP_TIME = 0.1
 
-# from http://flask.pocoo.org/docs/0.11/testing/
+# To test contest_result's ability to handle failed jobs, just add
+# raise ValueError("x") to the top of do_battle in battle.py
+#
+# Then you will see a failed assertion:
+#       assert response.status != "500 INTERNAL SERVER ERROR"
+# for the test_contest_result test case
+#
+# I couldn't find a more elegant way to test for this case.
+#
 
 class ContestTestCase(unittest.TestCase):
 
@@ -101,6 +109,8 @@ class ContestTestCase(unittest.TestCase):
         while response.status == "102 PROCESSING":
             time.sleep(POLL_SLEEP_TIME)
             response = self.app.get('/contest-result/' + job_id)
+
+        assert response.status != "500 INTERNAL SERVER ERROR"
 
         response_json = json.loads(response.data)
 
