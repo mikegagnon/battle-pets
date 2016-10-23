@@ -83,7 +83,6 @@ def arena():
 
     return flask.json.dumps(job.id)
 
-# TODO: robust error checking
 @app.route("/arena-result/<string:jobid>", methods=["GET"])
 def arena_result(jobid):
 
