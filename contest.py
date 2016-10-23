@@ -11,7 +11,9 @@ import validation
 
 app = flask.Flask(__name__)
 
+# TODO: factor out redis.Redis()
 queue = rq.Queue(connection=redis.Redis())
+failed_queue = rq.get_failed_queue(connection=redis.Redis())
 
 CONTEST_SCHEMA = {
     "type": "object",
@@ -44,6 +46,7 @@ def close_connection(exception):
 @app.errorhandler(error.InvalidUsage)
 @app.errorhandler(error.NotFound)
 @app.errorhandler(error.Processing)
+@app.errorhandler(error.InternalServerError)
 def handle_error(error):
     response = flask.jsonify(error.to_dict())
     response.status_code = error.status_code
@@ -85,6 +88,10 @@ def contest():
 # TODO: robust error checking
 @app.route("/contest-result/<string:jobid>", methods=["GET"])
 def contest_result(jobid):
+
+    if failed_queue.fetch_job(jobid).is_failed:
+        raise error.InternalServerError("There was an error in the server. " +
+            "The job has failed.")
 
     job = queue.fetch_job(jobid)
 
