@@ -296,7 +296,7 @@ class BattleTestCase(unittest.TestCase):
 
         result = battle.do_battle(pet1, pet2, "strength", 0.0)
 
-        assert result == ["foo", "bar"]
+        assert result == ("foo", "bar")
 
     def test_battle_agility(self):
         pet1 = copy.deepcopy(BattleTestCase.default_pet)
@@ -308,7 +308,7 @@ class BattleTestCase(unittest.TestCase):
 
         result = battle.do_battle(pet1, pet2, "agility", 0.0)
 
-        assert result == ["bar", "foo"]
+        assert result == ("bar", "foo")
 
     def test_battle_wit(self):
         pet1 = copy.deepcopy(BattleTestCase.default_pet)
@@ -320,7 +320,7 @@ class BattleTestCase(unittest.TestCase):
 
         result = battle.do_battle(pet1, pet2, "wit", 0.0)
 
-        assert result == ["bar", "foo"]
+        assert result == ("bar", "foo")
 
     def test_battle_experience(self):
         pet1 = copy.deepcopy(BattleTestCase.default_pet)
@@ -332,14 +332,14 @@ class BattleTestCase(unittest.TestCase):
 
         result = battle.do_battle(pet1, pet2, "senses", 0.0)
 
-        assert result == ["bar", "foo"]
+        assert result == ("bar", "foo")
 
         pet1.experience = 1
         pet2.experience = 0
 
         result = battle.do_battle(pet1, pet2, "senses", 0.0)
 
-        assert result == ["foo", "bar"]
+        assert result == ("foo", "bar")
 
     def test_battle_rowid(self):
         pet1 = copy.deepcopy(BattleTestCase.default_pet)
@@ -350,14 +350,14 @@ class BattleTestCase(unittest.TestCase):
 
         result = battle.do_battle(pet1, pet2, "senses", 0.0)
 
-        assert result == ["foo", "bar"]
+        assert result == ("foo", "bar")
 
         pet1.rowid = 1
         pet2.rowid = 0
 
         result = battle.do_battle(pet1, pet2, "senses", 0.0)
 
-        assert result == ["bar", "foo"]
+        assert result == ("bar", "foo")
         
 if __name__ == '__main__':
     unittest.main()

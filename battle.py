@@ -30,21 +30,21 @@ def do_battle(pet1, pet2, category, sleep_time_battle):
     attr2 = pet2.attributes[category]
 
     if attr1 > attr2:
-        return [pet1.name, pet2.name]
+        return (pet1.name, pet2.name)
     elif attr2 > attr1:
-        return [pet2.name, pet1.name]
+        return (pet2.name, pet1.name)
 
     # attr1 == attr2
     elif pet1.experience > pet2.experience:
-        return [pet1.name, pet2.name]
+        return (pet1.name, pet2.name)
     elif pet2.experience > pet1.experience:
-        return [pet2.name, pet1.name]
+        return (pet2.name, pet1.name)
 
     # pet1.experience == pet2.experience
     elif pet1.rowid < pet2.rowid:
-        return [pet1.name, pet2.name]
+        return (pet1.name, pet2.name)
     elif pet2.rowid < pet1.rowid:
-        return [pet2.name, pet1.name]
+        return (pet2.name, pet1.name)
 
     # This shouldn't happen
     else:
@@ -56,7 +56,7 @@ def do_battle(pet1, pet2, category, sleep_time_battle):
 # TODO: use with keyword to protect connection closing?
 def do_battle_db(pet1, pet2, category, sleep_time_battle, db_filename):
 
-    [victor, second_place] = do_battle(pet1, pet2, category, sleep_time_battle)
+    victor, second_place = do_battle(pet1, pet2, category, sleep_time_battle)
 
     conn = sqlite3.connect(db_filename)
 
