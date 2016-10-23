@@ -322,6 +322,8 @@ class ArenaTestCase(unittest.TestCase):
             conn = db.get_db(arena.app)
             cursor = conn.cursor()
 
+
+            # Test db update for Pets
             cursor.execute("SELECT wins, losses, experience FROM Pets where " +
                 "name = ?;", (winner, ))
             data = cursor.fetchone()
@@ -331,6 +333,27 @@ class ArenaTestCase(unittest.TestCase):
                 "name = ?;", (loser, ))
             data = cursor.fetchone()
             assert data == loser_xp
+
+
+            # Test History record
+            cursor.execute('''SELECT victor, second_place, battle_time
+                              FROM History''')
+
+            data = cursor.fetchall()
+
+            assert len(data) == 1
+
+            victor, second_place, timestamp = data[0]
+
+            assert victor == winner
+            assert second_place == loser
+
+            timestamp += " GMT"
+
+            battle_time = time.strptime(timestamp, "%Y-%m-%d %H:%M:%S %Z")
+            now = time.gmtime(None)
+
+            assert abs(time.mktime(battle_time) - time.mktime(now)) <= 1.0
 
     def test_arena_result_foo_wins(self):
 
