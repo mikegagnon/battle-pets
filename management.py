@@ -125,19 +125,18 @@ def get_pet(petname):
         raise error.NotFound("A pet with the name '%s' does not exist." %
             petname)
 
-    # TODO: rm else
-    else:
-        response = {
-                "name": data[0],
-                "strength": data[1],
-                "agility": data[2],
-                "wit": data[3],
-                "senses": data[4],
-                "wins": data[5],
-                "losses": data[6],
-                "experience": data[7]
-            }
-        return flask.json.dumps(response)
+    response = {
+            "name": data[0],
+            "strength": data[1],
+            "agility": data[2],
+            "wit": data[3],
+            "senses": data[4],
+            "wins": data[5],
+            "losses": data[6],
+            "experience": data[7]
+        }
+
+    return flask.json.dumps(response)
 
 # TODO: arguments from command line
 if __name__ == "__main__":
