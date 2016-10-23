@@ -124,6 +124,74 @@ optional arguments:
   --url [URL]  The URL of the Arena service
 ```
 
+## REST interfaces
+
+### `[management service]/new-pet`
+
+You can creete new pets by posting JSON to `[management service]/new-pet`.
+
+Here is an example JSON request:
+
+```JSON
+ {
+    "name": "Charmander",
+    "strength": 0.1,
+    "agility": 0.2,
+    "wit": 0.5,
+    "senses": 0.2
+}
+```
+
+The sum of `(strength, agility, wit, senses)` must be <= 1.0.
+Furthermore, each attribute must be <= 1.0 and >= 0.
+
+The length of `name` must be <= 100.
+
+Here is the JSON Schema for `/new-pet` requests:
+
+```JSON
+NEW_PET_REQUEST_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "strength": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+        },
+        "agility": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+        },
+        "wit": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+        },
+        "senses": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+        }
+    },
+    "required": ["name", "strength", "agility", "wit", "senses"]
+}
+```
+
+## Design decisions
+
+I chose Python because I love the language 
+
+The services are implemented in Flask. I chose Flask because it's a
+microframework, and thus has a low barrier to entry. I've never coded
+a REST service before, so barrier to entry was important.
+
+In similar reasoning for my choice for Flask, I chose RQ and Redis
+to handle the contest workers and the queue. RQ markets itself as
+"simple job queues."
 
 ## Bottom
 
@@ -152,6 +220,7 @@ TODO high priority
 - README
 - Internal documentation
 - Test on linux
+- Make sure pet names are url safe
 
 TODO low priority
 - Training interface: reports the most high value matches
