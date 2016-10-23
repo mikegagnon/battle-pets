@@ -25,6 +25,7 @@ ERRATA:
 - Using polling instead of callbacks
 - db connection in battle
 - testing for failed jobs
+- didn't use git branch
 
 TODO
 - test_battle
