@@ -59,6 +59,20 @@ class ContestTestCase(unittest.TestCase):
                 "message": "No JSON object could be decoded"
             }
 
+    def test_contest_fail_schema(self):
+        request_data = {
+                "name1": "foo",
+                "name2": "bar",
+                "category": "this will cause an error"
+            }
+
+        response = self.app.post('/contest', data=json.dumps(request_data),
+            content_type='application/json')
+
+        assert response.status == "400 BAD REQUEST"
+        assert json.loads(response.data)["message"] == \
+            "Your JSON post does not match CONTEST_SCHEMA."
+
     def test_contest_and_result(self):
         request_data = {
                 "name1": "foo",
