@@ -49,8 +49,6 @@ def do_battle(pet1, pet2, category, sleep_time_battle):
         assert pet1.rowid == pet2.rowid
         raise ValueError("pet1.rowid == pet2.rowid")
 
-# TODO: document
-# TODO: use with keyword to protect connection closing?
 def do_battle_db(pet1, pet2, category, sleep_time_battle, db_filename):
 
     victor, second_place = do_battle(pet1, pet2, category, sleep_time_battle)
