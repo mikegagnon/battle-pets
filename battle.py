@@ -75,17 +75,9 @@ def do_battle(pet1, pet2, category):
 def do_battle_db(pet1, pet2, category):
     result = do_battle(pet1, pet2, category)
 
-    print result
-
     conn = sqlite3.connect(DB_FILENAME)
 
-    print "asdf"
-
-    #conn = get_db()
-    print "asdf"
     cursor = conn.cursor()
-
-    print result["victor"]
 
     cursor.execute('''
         UPDATE Pets SET wins = wins + 1 WHERE name = ?;
