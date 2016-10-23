@@ -3,6 +3,8 @@ import time
 # TODO: document
 # TODO: does battle or contest update the db?
 
+SLEEP_TIME_BATTLE = 0.2
+
 class BattlePet():
 
     def __init__(self, pet_record):
@@ -20,6 +22,8 @@ class BattlePet():
         self.experience = pet_record[7]
 
 def do_battle(pet1, pet2, category):
+
+    time.sleep(SLEEP_TIME_BATTLE)
 
     result = {
         # Experience points
