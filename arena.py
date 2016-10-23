@@ -103,6 +103,18 @@ def arena_result(jobid):
     victor = job.result
     return flask.json.dumps(victor)
 
+@app.route("/history", methods=["GET"])
+def history():
+
+    conn = db.get_db(app)
+    cursor = conn.cursor()
+
+    cursor.execute('''SELECT victor, second_place, battle_time FROM History''')
+
+    rows = cursor.fetchall()
+
+    return flask.json.dumps(rows)
+
 
 if __name__ == "__main__":
 

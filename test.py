@@ -302,9 +302,7 @@ class ArenaTestCase(unittest.TestCase):
 
             conn.commit()
 
-    def do_test_arena_result(self, winner, loser, winner_xp, loser_xp):
-
-        job_id = self.submit_contest()
+    def assert_result(self, job_id, winner):
 
         response = self.app.get('/arena-result/' + job_id)
 
@@ -317,6 +315,13 @@ class ArenaTestCase(unittest.TestCase):
         response_json = flask.json.loads(response.data)
 
         assert response_json == winner
+
+    # TODO factor out code common to test_history
+    def do_test_arena_result(self, winner, loser, winner_xp, loser_xp):
+
+        job_id = self.submit_contest()
+
+        self.assert_result(job_id, winner)
 
         with arena.app.app_context():
             conn = db.get_db(arena.app)
@@ -384,6 +389,26 @@ class ArenaTestCase(unittest.TestCase):
         assert response_json == {
             "message": "Could not find a contest for that job ID"
         }
+
+    def test_history(self):
+
+        job_id = self.submit_contest()
+        self.assert_result(job_id, "foo")
+
+        time.sleep(0)
+
+        job_id = self.submit_contest()
+        self.assert_result(job_id, "foo")
+
+        response = self.app.get("/history")
+
+        [(victor1, loser1, timestamp1),
+         (victor2, loser2, timestamp2)] = flask.json.loads(response.data)
+
+        assert victor1 == victor2 and victor1 == "foo"
+        assert loser1 == loser2 and loser2 == "bar"
+
+
 
 class BattleTestCase(unittest.TestCase):
 
