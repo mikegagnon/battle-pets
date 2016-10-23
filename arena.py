@@ -41,9 +41,7 @@ def close_connection(exception):
         db.close()
 
 # from http://flask.pocoo.org/docs/0.11/patterns/apierrors/
-# TODO: get rid of unnecessary error handlerss
 @app.errorhandler(error.InvalidUsage)
-@app.errorhandler(error.NotFound)
 @app.errorhandler(error.Processing)
 @app.errorhandler(error.InternalServerError)
 def handle_error(error):
