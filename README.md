@@ -42,4 +42,5 @@ TODO
 - Leader board
 - History of past battles
 - More interesting battles
+- is None v. == None
 
