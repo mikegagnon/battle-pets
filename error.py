@@ -20,3 +20,6 @@ class NotFound(RestError):
 
 class Processing(RestError):
     status_code = 102
+
+class InternalServerError(RestError):
+    status_code = 500
