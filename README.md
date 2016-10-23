@@ -31,12 +31,14 @@ TODO
 - test_battle
 - add more tests as needed
 - breakup functions
+- change contest to arena
+- give two points for losing, one point for winning
 - README
 - Internal documentation
 - Tool suite for production use
 - Uncoil unnecessary test dependencies
 - cleanup imports
-- Training interface
+- Training interface: reports the most high value matches
 - Leader board
 - History of past battles
 - More interesting battles
