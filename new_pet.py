@@ -18,12 +18,17 @@ def request(args):
     response = requests.post(args.url + "/new-pet", data=json.dumps(data),
         headers = {'content-type': 'application/json'})
 
-    if response.status_code != 200:
-        sys.stderr.write(str(response.status_code) + "\n")
-        sys.stderr.write(response.text)
-        sys.stderr.flush()
+    if response.status_code == 400:
+        if args.expect_400:
+            sys.exit(0)
+        else:
+            sys.stderr.write(response.text)
+            sys.stderr.flush()
+            sys.exit(1)
 
-        sys.exit(1)
+    elif response.status_code != 200:
+        print response.status_code
+        raise ValueError("Unrecognied response")
 
     sys.stdout.write(response.text,)
     sys.stdout.flush()
@@ -56,6 +61,10 @@ if __name__ == "__main__":
     parser.add_argument('--senses', nargs='?',
         help="Senses of the pet",
         default=0.25, dest="senses", type=float)
+
+    parser.add_argument('--expect_400',
+        help="Do not print to std_err if a 400 occurs",
+        default=False, dest="expect_400", action="store_true")
 
     args = parser.parse_args()
 
