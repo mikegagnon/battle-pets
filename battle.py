@@ -3,7 +3,6 @@ import time
 
 class BattlePet():
 
-    # TODO: take actual arguments in stead of pet_record
     def __init__(self, name, strength, agility, wit, senses, wins, losses,
             experience, rowid):
 
@@ -21,7 +20,6 @@ class BattlePet():
         self.experience = experience
         self.rowid = rowid
 
-# TODO: tuples
 def do_battle(pet1, pet2, category, sleep_time_battle):
 
     time.sleep(sleep_time_battle)
@@ -50,7 +48,6 @@ def do_battle(pet1, pet2, category, sleep_time_battle):
     else:
         assert pet1.rowid == pet2.rowid
         raise ValueError("pet1.rowid == pet2.rowid")
-
 
 # TODO: document
 # TODO: use with keyword to protect connection closing?
