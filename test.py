@@ -9,7 +9,7 @@ import tempfile
 import time
 
 import db
-import contest
+import arena
 import battle
 
 # TODO: put in another file?
@@ -138,32 +138,32 @@ class ManagementTestCase(unittest.TestCase):
                 "message": "A pet with the name 'foo' does not exist."
             }
 
-# To test contest_result's ability to handle failed jobs, just add
+# To test arena_result's ability to handle failed jobs, just add
 # raise ValueError("x") to the top of do_battle in battle.py
 #
 # Then you will see a failed assertion:
 #       assert response.status != "500 INTERNAL SERVER ERROR"
-# for the test_contest_result test case
+# for the test_arena_result test case
 #
 # I couldn't find a more elegant way to test for this case.
 #
 
-class ContestTestCase(unittest.TestCase):
+class ArenaTestCase(unittest.TestCase):
 
     BATTLE_TIME = 0.2
     POLL_SLEEP_TIME = 0.1
 
     def setUp(self):
-        self.db_fd, contest.app.config['DATABASE'] = tempfile.mkstemp()
-        contest.app.config['BATTLE_TIME'] = ContestTestCase.BATTLE_TIME
+        self.db_fd, arena.app.config['DATABASE'] = tempfile.mkstemp()
+        arena.app.config['BATTLE_TIME'] = ArenaTestCase.BATTLE_TIME
 
-        contest.app.config['TESTING'] = True
-        self.app = contest.app.test_client()
+        arena.app.config['TESTING'] = True
+        self.app = arena.app.test_client()
         self.app.debug = True
-        with contest.app.app_context():
-            db.init_db(contest.app)
+        with arena.app.app_context():
+            db.init_db(arena.app)
 
-            conn = db.get_db(contest.app)
+            conn = db.get_db(arena.app)
             cursor = conn.cursor()
 
             # Populate the database
@@ -180,12 +180,12 @@ class ContestTestCase(unittest.TestCase):
 
     def tearDown(self):
         os.close(self.db_fd)
-        os.unlink(contest.app.config['DATABASE'])
+        os.unlink(arena.app.config['DATABASE'])
 
-    def test_contest_no_json(self):
+    def test_arena_no_json(self):
         request_data = "this is not json"
 
-        response = self.app.post('/contest', data=request_data,
+        response = self.app.post('/arena', data=request_data,
             content_type='application/json')
 
         assert response.status == "400 BAD REQUEST"
@@ -193,14 +193,14 @@ class ContestTestCase(unittest.TestCase):
                 "message": "No JSON object could be decoded"
             }
 
-    def test_contest_fail_schema(self):
+    def test_arena_fail_schema(self):
         request_data = {
                 "name1": "foo",
                 "name2": "bar",
                 "category": "this will cause an error"
             }
 
-        response = self.app.post('/contest', data=json.dumps(request_data),
+        response = self.app.post('/arena', data=json.dumps(request_data),
             content_type='application/json')
 
         assert response.status == "400 BAD REQUEST"
@@ -214,7 +214,7 @@ class ContestTestCase(unittest.TestCase):
                 "category": "strength"
             }
 
-        response = self.app.post('/contest', data=json.dumps(request_data),
+        response = self.app.post('/arena', data=json.dumps(request_data),
             content_type='application/json')
 
         assert response.status == "200 OK"
@@ -224,18 +224,18 @@ class ContestTestCase(unittest.TestCase):
 
         return job_id
 
-    def test_contest(self):
+    def test_arena(self):
         self.submit_contest()
 
     # TODO: test for database updates
-    def test_contest_result(self):
+    def test_arena_result(self):
         job_id = self.submit_contest()
 
-        response = self.app.get('/contest-result/' + job_id)
+        response = self.app.get('/arena-result/' + job_id)
 
         while response.status == "102 PROCESSING":
-            time.sleep(ContestTestCase.POLL_SLEEP_TIME)
-            response = self.app.get('/contest-result/' + job_id)
+            time.sleep(ArenaTestCase.POLL_SLEEP_TIME)
+            response = self.app.get('/arena-result/' + job_id)
 
         assert response.status != "500 INTERNAL SERVER ERROR"
 

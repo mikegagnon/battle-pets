@@ -58,8 +58,8 @@ def battlePetFromRow(row):
 
 # TODO: do not allow the same pet to battle itself. test for this
 # TODO: document
-@app.route("/contest", methods=["POST"])
-def contest():
+@app.route("/arena", methods=["POST"])
+def arena():
 
     request_data = validation.validate_json("CONTEST_SCHEMA", CONTEST_SCHEMA)
 
@@ -86,8 +86,8 @@ def contest():
     return flask.json.dumps(job.id)
 
 # TODO: robust error checking
-@app.route("/contest-result/<string:jobid>", methods=["GET"])
-def contest_result(jobid):
+@app.route("/arena-result/<string:jobid>", methods=["GET"])
+def arena_result(jobid):
 
     if failed_queue.fetch_job(jobid).is_failed:
         raise error.InternalServerError("There was an error in the server. " +
