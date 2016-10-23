@@ -21,6 +21,8 @@ def request(args):
     if response.status_code != 200:
         sys.stderr.write(str(response.status_code) + "\n")
         sys.stderr.write(response.text + "\n")
+    else:
+        print response.text
 
 
 if __name__ == "__main__":
