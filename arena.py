@@ -57,7 +57,8 @@ def battlePetFromRow(row):
 @app.route("/arena", methods=["POST"])
 def arena():
 
-    request_data = validation.validate_json("CONTEST_SCHEMA", CONTEST_SCHEMA)
+    request_data = validation.validate_json(flask.request, "CONTEST_SCHEMA",
+        CONTEST_SCHEMA)
 
     conn = db.get_db(app)
     cursor = conn.cursor()

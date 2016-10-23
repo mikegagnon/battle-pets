@@ -69,8 +69,8 @@ def valid_new_pet(pet):
 @app.route("/new-pet", methods=["POST"])
 def new_pet():
 
-    request_data = validation.validate_json("NEW_PET_REQUEST_SCHEMA",
-        NEW_PET_REQUEST_SCHEMA)
+    request_data = validation.validate_json(flask.request,
+        "NEW_PET_REQUEST_SCHEMA", NEW_PET_REQUEST_SCHEMA)
 
     conn = db.get_db(app)
     cursor = conn.cursor()

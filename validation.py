@@ -4,13 +4,13 @@ import jsonschema
 import error
 
 # TODO: move lask.request.get_json(silent = True) into caller, not here
-def validate_json(schema_name, schema):
+def validate_json(request, schema_name, schema):
 
     # Setting silent=True causes get_json to return None on error, instead
     # of calling on_json_loading_failed. The latter case is undesirable because
     # it leads to an HTML error message, whereas we want to produce JSON
     # error messages.
-    request_data = flask.request.get_json(silent = True)
+    request_data = request.get_json(silent = True)
 
     if request_data == None:
         raise error.InvalidUsage("No JSON object could be decoded") 

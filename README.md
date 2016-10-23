@@ -36,7 +36,6 @@ TODO high priority
 - Internal documentation
 - Usage test
 - Test on linux
-- proper validate json
 
 TODO low priority
 - Training interface: reports the most high value matches
