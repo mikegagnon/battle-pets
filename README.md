@@ -31,7 +31,6 @@ TODO
 - test_battle
 - add more tests as needed
 - breakup functions
-- give two points for losing, one point for winning
 - README
 - Internal documentation
 - Tool suite for production use
