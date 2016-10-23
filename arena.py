@@ -103,6 +103,7 @@ def arena_result(jobid):
     victor = job.result
     return flask.json.dumps(victor)
 
+# TODO: note on history pagies
 @app.route("/history", methods=["GET"])
 def history():
 
