@@ -69,8 +69,11 @@ def arena():
 
     pet_rows = cursor.fetchall()
 
+    # ERRATA: this validation be broken up into two validations
+    # TODO: clearer documentation of errata
     if len(pet_rows) != 2:
-        message = "One or more of the pets you specified do not exist."
+        message = "One or more of the pets you specified do not exist, or " + \
+            "you have specified that the same pet fight itself"
         raise error.InvalidUsage(message)
 
     pet1 = battlePetFromRow(pet_rows[0])
