@@ -28,6 +28,7 @@ ERRATA:
 - didn't use git branch
 - Redis necessary for test
 - Server error messages not conventional
+- TDD
 
 TODO
 - Hoist string constants somewhere else
