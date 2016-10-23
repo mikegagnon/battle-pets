@@ -346,7 +346,7 @@ class ArenaTestCase(unittest.TestCase):
 
 
             # Test History record
-            cursor.execute('''SELECT victor, second_place, battle_time
+            cursor.execute('''SELECT victor, second_place, battle_timestamp
                               FROM History''')
 
             data = cursor.fetchall()
