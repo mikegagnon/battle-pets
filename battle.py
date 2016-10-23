@@ -77,6 +77,11 @@ def do_battle_db(pet1, pet2, category, sleep_time_battle, db_filename):
         ''',
         (second_place, ))
 
+    cursor.execute('''
+        INSERT INTO History(victor, second_place)
+        VALUES (?, ?);''',
+        (victor, second_place))
+
     conn.commit()
 
     conn.close()
