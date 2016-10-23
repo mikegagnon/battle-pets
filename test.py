@@ -226,6 +226,7 @@ class ContestTestCase(unittest.TestCase):
     def test_contest(self):
         self.submit_contest()
 
+    # TODO: test for database updates
     def test_contest_result(self):
         job_id = self.submit_contest()
 
@@ -245,7 +246,29 @@ class ContestTestCase(unittest.TestCase):
 class BattleTestCase(unittest.TestCase):
 
     def test_battle(self):
-        pass
+        pet1 = battle.BattlePet(
+            name = "foo",
+            strength = 0.3,
+            agility = 0.2,
+            wit = 0.25,
+            senses = 0.25,
+            wins = 0,
+            losses = 0,
+            experience = 0,
+            rowid = 0)
 
+        pet2 = battle.BattlePet(
+            name = "foo",
+            strength = 0.2,
+            agility = 0.3,
+            wit = 0.25,
+            senses = 0.25,
+            wins = 0,
+            losses = 0,
+            experience = 1,
+            rowid = 1)
+
+        battle.do_battle(pet1, pet2, "strength", 0.0)
+        
 if __name__ == '__main__':
     unittest.main()
