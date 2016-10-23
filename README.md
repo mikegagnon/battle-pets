@@ -34,7 +34,6 @@ ERRATA:
 TODO high priority
 - README
 - Internal documentation
-- Usage test
 - Test on linux
 
 TODO low priority
