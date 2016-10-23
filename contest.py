@@ -29,6 +29,7 @@ CONTEST_SCHEMA = {
     "required": ["name1", "name2", "category"]
 }
 
+# Number of seconds in a day
 ONE_DAY = 86400
 
 # from http://flask.pocoo.org/docs/0.11/patterns/sqlite3/
@@ -39,6 +40,7 @@ def close_connection(exception):
         db.close()
 
 # from http://flask.pocoo.org/docs/0.11/patterns/apierrors/
+# TODO: get rid of unnecessary error handlerss
 @app.errorhandler(error.InvalidUsage)
 @app.errorhandler(error.NotFound)
 @app.errorhandler(error.Processing)
@@ -51,7 +53,7 @@ def battlePetFromRow(row):
     return battle.BattlePet(row[0], row[1], row[2], row[3], row[4], row[5],
         row[6], row[7], row[8])
 
-# TODO: do not allow the same pet to battle itself
+# TODO: do not allow the same pet to battle itself. test for this
 # TODO: document
 @app.route("/contest", methods=["POST"])
 def contest():
@@ -65,14 +67,14 @@ def contest():
         "losses, experience, rowid FROM Pets WHERE name = ? or name = ?;",
         (request_data["name1"], request_data["name2"]))
 
-    pets = cursor.fetchall()
+    pet_rows = cursor.fetchall()
 
-    if len(pets) != 2:
+    if len(pet_rows) != 2:
         message = "One or more of the pets you specified do not exist."
         raise error.InvalidUsage(message)
 
-    pet1 = battlePetFromRow(pets[0])
-    pet2 = battlePetFromRow(pets[1])
+    pet1 = battlePetFromRow(pet_rows[0])
+    pet2 = battlePetFromRow(pet_rows[1])
 
     job = queue.enqueue(battle.do_battle_db, pet1, pet2,
         request_data["category"], app.config['BATTLE_TIME'],
