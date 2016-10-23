@@ -29,7 +29,6 @@ ERRATA:
 - Redis necessary for test
 
 TODO
-- test_battle
 - add more tests as needed
 - breakup functions
 - README
