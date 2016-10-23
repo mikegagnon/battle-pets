@@ -151,6 +151,7 @@ class ArenaTestCase(unittest.TestCase):
     BATTLE_TIME = 0.2
     POLL_SLEEP_TIME = 0.1
 
+    # TODO: drop self.db_fd
     def setUp(self):
         self.db_fd, arena.app.config['DATABASE'] = tempfile.mkstemp()
         arena.app.config['BATTLE_TIME'] = ArenaTestCase.BATTLE_TIME
@@ -166,12 +167,15 @@ class ArenaTestCase(unittest.TestCase):
 
             # Populate the database
             cursor.execute('''
-                INSERT INTO Pets(name, strength, agility, wit, senses)
-                VALUES ("foo", 0.25, 0.25, 0.25, 0.25);''')
+                INSERT INTO Pets(name, strength, agility, wit, senses,
+                    wins, losses, experience)
+
+                VALUES ("foo", 0.25, 0.25, 0.25, 0.25, 0, 0, 0);''')
             
             cursor.execute('''
-                INSERT INTO Pets(name, strength, agility, wit, senses)
-                VALUES ("bar", 0.25, 0.25, 0.25, 0.25);''')
+                INSERT INTO Pets(name, strength, agility, wit, senses,
+                    wins, losses, experience)
+                VALUES ("bar", 0.25, 0.25, 0.25, 0.25, 0, 0, 0);''')
 
             conn.commit()
 
@@ -272,6 +276,17 @@ class ArenaTestCase(unittest.TestCase):
         response_json = flask.json.loads(response.data)
 
         assert response_json == "foo"
+
+        with arena.app.app_context():
+            conn = db.get_db(arena.app)
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT wins, losses, experience FROM Pets where " +
+                "name = ?;", ("foo", ))
+
+            data = cursor.fetchone()
+
+            assert data == (1, 0, 2)
 
     def test_arena_result_invalid_jobid(self):
 
