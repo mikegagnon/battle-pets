@@ -10,9 +10,9 @@ import validation
 
 app = flask.Flask(__name__)
 
-# TODO: factor out redis.Redis()
-queue = rq.Queue(connection=redis.Redis())
-failed_queue = rq.get_failed_queue(connection=redis.Redis())
+redis_conn = redis.Redis()
+queue = rq.Queue(connection=redis_conn)
+failed_queue = rq.get_failed_queue(connection=redis_conn)
 
 CONTEST_SCHEMA = {
     "type": "object",
