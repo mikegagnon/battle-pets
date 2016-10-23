@@ -21,3 +21,4 @@ ERRATA:
 - Never used a job queue before
 - No security built in
 - Using polling instead of callbacks
+- db connection in battle
