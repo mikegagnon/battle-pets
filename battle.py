@@ -15,28 +15,28 @@ DB_FILENAME = "database.db"
 class BattlePet():
 
     # TODO: take actual arguments in stead of pet_record
-    def __init__(self, pet_record):
-        self.name = pet_record[0]
+    def __init__(self, name, strength, agility, wit, senses, wins, losses,
+            experience, rowid):
+
+        self.name = name
 
         self.attributes = {
-            "strength": pet_record[1],
-            "agility": pet_record[2],
-            "wit": pet_record[3],
-            "senses": pet_record[4],
+            "strength": strength,
+            "agility": agility,
+            "wit": wit,
+            "senses": senses,
         }
 
-        self.wins = pet_record[5]
-        self.losses = pet_record[6]
-        self.experience = pet_record[7]
+        self.wins = wins
+        self.losses = losses
+        self.experience = experience
+        self.rowid = rowid
 
 def do_battle(pet1, pet2, category):
 
     time.sleep(SLEEP_TIME_BATTLE)
 
-    result = {
-        # Experience points
-        category: 1
-    }
+    result = {}
 
     attr1 = pet1.attributes[category]
     attr2 = pet2.attributes[category]
@@ -47,11 +47,27 @@ def do_battle(pet1, pet2, category):
     elif attr2 > attr1:
         result["victor"] = pet2.name
         result["2nd place"] = pet1.name
-    else:
-        # TODO
+
+    # attr1 == attr2
+    elif pet1.experience > pet2.experience:
         result["victor"] = pet1.name
         result["2nd place"] = pet2.name
-        pass
+    elif pet2.experience > pet1.experience:
+        result["victor"] = pet2.name
+        result["2nd place"] = pet1.name
+
+    # pet1.experience == pet2.experience
+    elif pet1.rowid < pet2.rowid:
+        result["victor"] = pet1.name
+        result["2nd place"] = pet2.name
+    elif pet2.rowid < pet1.rowid:
+        result["victor"] = pet2.name
+        result["2nd place"] = pet1.name
+
+    # This shouldn't happen
+    else:
+        assert pet1.rowid == pet2.rowid
+        raise ValueError("pet1.rowid == pet2.rowid")
 
     return result
 

@@ -47,6 +47,10 @@ def handle_error(error):
     response.status_code = error.status_code
     return response
 
+def battlePetFromRow(row):
+    return battle.BattlePet(row[0], row[1], row[2], row[3], row[4], row[5],
+        row[6], row[7], row[8])
+
 # TODO: do not allow the same pet to battle itself
 # TODO: document
 @app.route("/contest", methods=["POST"])
@@ -67,8 +71,8 @@ def contest():
         message = "One or more of the pets you specified do not exist."
         raise error.InvalidUsage(message)
 
-    pet1 = battle.BattlePet(pets[0])
-    pet2 = battle.BattlePet(pets[1])
+    pet1 = battlePetFromRow(pets[0])
+    pet2 = battlePetFromRow(pets[1])
 
     job = queue.enqueue(battle.do_battle_db, pet1, pet2,
         request_data["category"], result_ttl=ONE_DAY, ttl=ONE_DAY)
