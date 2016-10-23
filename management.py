@@ -127,6 +127,8 @@ def get_pet(petname):
     if data == None:
         raise error.NotFound("A pet with the name '%s' does not exist." %
             petname)
+
+    # TODO: rm else
     else:
         response = {
                 "name": data[0],
