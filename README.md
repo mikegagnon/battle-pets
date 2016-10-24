@@ -2,7 +2,7 @@
 by Michael Gagnon
 
 ## Installation
-These are the installation commands I used setup Battle Pets on a fresh install of Ubuntu.16.04.1
+These are the installation commands I used to setup Battle Pets on a fresh install of Ubuntu.16.04.1
 
 ```
 download https://bootstrap.pypa.io/get-pip.py
@@ -135,7 +135,7 @@ optional arguments:
 ```
 ## Architecture decisions
 
-I chose Python because I love the language 
+I chose Python because I love the language.
 
 The services are implemented in Flask. I chose Flask because it's a
 microframework, and thus has a low barrier to entry. I've never coded
