@@ -235,6 +235,15 @@ For example requesting `/get-pet/Dweble` might yield:
 }
 ```
 
+Or, if Dweble isn't in the databse it would yield "404 NOT FOUND" status code,
+along with:
+
+```JSON
+{
+  "message": "A pet with the name 'Dweble' does not exist."
+}
+```
+
 ## Bottom
 
 ERRATA:
