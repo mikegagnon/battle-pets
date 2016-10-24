@@ -311,10 +311,31 @@ You use this job id when qeurying `/arena_result`.
   `{"message": "One or more of the pets you specified do not exist, or
      you have specified that the same pet fight itself"}`.
    It would be preferable to give each of these cases unique error messages,
-   rather then clumping them into one. However, I did not implement it that
+   rather then clumping them into one. However, I did not implement it sthat
    way to due to time constraints and it seems like a low priority change.
 
-### `[arena service]/
+### `[arena service]/arena_result/<string:jobid>`
+
+To check for the result of a battle, issue a GET request to `/arena_result/<string:jobid>`.
+It returns the name of the victor.
+
+For example, GET `/arena_result/e1e17a8d-8fe3-435c-9277-6b086c5b1415` might yield:
+
+```JSON
+"Charmander"
+```
+
+Or, if the battle is still processing it would return "102 PROCESSING" status code along with:
+
+```JSON
+{
+  "message": "The server is still processing this battle."
+} 
+```
+
+Or, if the job id doesn't refer to an actual contest, `/arena_result` responds with
+  "404 NOT FOUND" status code along with
+  `{"message": "Could not find a contest for that job ID"}`
 
 ## Bottom
 
