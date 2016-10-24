@@ -174,9 +174,10 @@ The length of `name` must be <= 100.
   a "400 BAD REQUEST" status code, along with 
   `{"message": "A pet with the name '[name]' already exists."}`
 - If either (1) the sum of the attributes > 1.0, or (2)
-  the name exceeds max length, then `/new-pet` responds with
+  the name exceeds max length, or (3) the name contains invalid characters, then `/new-pet` responds with
   a "400 BAD REQUEST" status code, along with 
-  `{"message": "The sum of (strength, agility, wit, senses) must be <= 1.0 AND the length of name must be <= 100."}`
+  `{"message": "The sum of (strength, agility, wit, senses) must be <= 1.0 AND the length of name must be <= 100
+  AND the name may only contain the characters [A-Za-z0-9]."}`
   It would be preferable to give each of these cases unique error messages, rather then clumping them into one.
   However, I did not implement it that way to due to time constraints and it seems like a low priority change.
   
