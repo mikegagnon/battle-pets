@@ -82,7 +82,7 @@ def arena():
             request_data["category"], app.config['BATTLE_TIME'],
             app.config['DATABASE'], result_ttl=ONE_DAY, ttl=ONE_DAY)
     except redis.ConnectionError:
-        message = "There was an internal server error"
+        message = "There was an internal server error."
         raise error.InternalServerError(message)
 
     return flask.json.dumps(job.id)
@@ -90,7 +90,11 @@ def arena():
 @app.route("/arena-result/<string:jobid>", methods=["GET"])
 def arena_result(jobid):
 
-    failed_job = failed_queue.fetch_job(jobid)
+    try:
+        failed_job = failed_queue.fetch_job(jobid)
+    except redis.ConnectionError:
+        message = "There was an internal server error."
+        raise error.InternalServerError(message)
 
     if failed_job == None:
         raise error.NotFound("Could not find a contest for that job ID")
@@ -98,7 +102,11 @@ def arena_result(jobid):
         raise error.InternalServerError("There was an error in the server. " +
             "The job has failed.")
 
-    job = queue.fetch_job(jobid)
+    try:
+        job = queue.fetch_job(jobid)
+    except redis.ConnectionError:
+        message = "There was an internal server error."
+        raise error.InternalServerError(message)
 
     if job.result == None:
         raise error.Processing("The server is still processing this battle.")
