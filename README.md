@@ -147,6 +147,25 @@ Furthermore, each attribute must be <= 1.0 and >= 0.
 
 The length of `name` must be <= 100.
 
+Possible responses:
+
+- Upon success, `/new-pet` responds with a "200 OK" status code, with
+  an empty body. Choosing to return an empty body follows the 
+  UNIX tradition of producing no output upon success.
+- If the post to `/new-pet` is not JSON, then it responds with
+  a "400 BAD REQUEST" status code, along with 
+  `{"message": "No JSON object could be decoded"}`
+- If the name is already taken, `/new-pet` resonds with
+  a "400 BAD REQUEST" status code, along with 
+  `{"message": "A pet with the name '[name]' already exists."}`
+- If either (1) the sum of the attributes > 1.0, or (2)
+  the name exceeds max length, then `/new-pet` responds with
+  a "400 BAD REQUEST" status code, along with 
+  `{"message": "The sum of (strength, agility, wit, senses) must be <= 1.0 AND the length of name must be <= 100."}`
+  It would be preferable to give each of these cases unique error messages, rather then clumping them into one.
+  However, I did not implement it that way to due to time constraints and it seems like a low priority change.
+  
+
 Here is the JSON Schema for `/new-pet` requests:
 
 ```JSON
@@ -180,6 +199,9 @@ NEW_PET_REQUEST_SCHEMA = {
     "required": ["name", "strength", "agility", "wit", "senses"]
 }
 ```
+
+### `[management service]/new-pet`
+
 
 ## Design decisions
 
