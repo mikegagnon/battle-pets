@@ -82,7 +82,7 @@ def arena():
             request_data["category"], app.config['BATTLE_TIME'],
             app.config['DATABASE'], result_ttl=ONE_DAY, ttl=ONE_DAY)
     except redis.ConnectionError:
-        message = "Could not connect to connect to Redis"
+        message = "There was an internal server error"
         raise error.InternalServerError(message)
 
     return flask.json.dumps(job.id)
