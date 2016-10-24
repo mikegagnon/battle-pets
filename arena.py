@@ -69,8 +69,6 @@ def arena():
 
     pet_rows = cursor.fetchall()
 
-    # ERRATA: this validation be broken up into two validations
-    # TODO: clearer documentation of errata
     if len(pet_rows) != 2:
         message = "One or more of the pets you specified do not exist, or " + \
             "you have specified that the same pet fight itself"
@@ -104,7 +102,6 @@ def arena_result(jobid):
     victor = job.result
     return flask.json.dumps(victor)
 
-# TODO: note on history pagies
 @app.route("/history", methods=["GET"])
 def history():
 

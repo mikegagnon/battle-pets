@@ -21,7 +21,6 @@ DEFAULT_PET = battle.BattlePet(
     experience = 0,
     rowid = 0)
 
-# TODO: put in another file?
 def post_new_pet(app, name, agility, senses, strength, wit):
     request_data = flask.json.dumps(
         {
@@ -170,7 +169,6 @@ class ArenaTestCase(unittest.TestCase):
     BATTLE_TIME = 0.2
     POLL_SLEEP_TIME = 0.1
 
-    # TODO: drop self.db_fd
     def setUp(self):
         self.db_fd, arena.app.config['DATABASE'] = tempfile.mkstemp()
         arena.app.config['BATTLE_TIME'] = ArenaTestCase.BATTLE_TIME
@@ -233,7 +231,6 @@ class ArenaTestCase(unittest.TestCase):
         assert flask.json.loads(response.data)["message"] == \
             "Your JSON post does not match CONTEST_SCHEMA."
 
-    # TODO: hoist string constants
     def test_arena_fail_missing_pet(self):
         request_data = {
                 "name1": "foo",
@@ -329,7 +326,6 @@ class ArenaTestCase(unittest.TestCase):
 
         assert response_json == winner
 
-    # TODO factor out code common to test_history
     def do_test_arena_result(self, winner, loser, winner_xp, loser_xp):
 
         job_id = self.submit_contest()

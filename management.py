@@ -68,7 +68,6 @@ def valid_new_pet(pet):
         pet["wit"] +
         pet["senses"]) <= 1.0
 
-# TODO: make sure pet names are url-safe
 @app.route("/new-pet", methods=["POST"])
 def new_pet():
 
