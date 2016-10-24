@@ -26,6 +26,15 @@ def request(args):
             sys.stderr.write(str(response.status_code) + "\n")
             sys.stderr.write(response.text)
             sys.exit(1)
+
+    if response.status_code == 500:
+        if args.expect_500:
+            sys.exit(0)
+        else:
+            sys.stderr.write(str(response.status_code) + "\n")
+            sys.stderr.write(response.text)
+            sys.exit(1)
+
     if response.status_code != 200:
         raise ValueError("Unexpected failure")
 
@@ -74,6 +83,10 @@ if __name__ == "__main__":
     parser.add_argument('--expect_400',
         help="Expect a 400 error",
         default=False, dest="expect_400", action="store_true")
+
+    parser.add_argument('--expect_500',
+        help="Expect a 500 error",
+        default=False, dest="expect_500", action="store_true")
 
     args = parser.parse_args()
 

@@ -77,9 +77,13 @@ def arena():
     pet1 = battlePetFromRow(pet_rows[0])
     pet2 = battlePetFromRow(pet_rows[1])
 
-    job = queue.enqueue(battle.do_battle_db, pet1, pet2,
-        request_data["category"], app.config['BATTLE_TIME'],
-        app.config['DATABASE'], result_ttl=ONE_DAY, ttl=ONE_DAY)
+    try:
+        job = queue.enqueue(battle.do_battle_db, pet1, pet2,
+            request_data["category"], app.config['BATTLE_TIME'],
+            app.config['DATABASE'], result_ttl=ONE_DAY, ttl=ONE_DAY)
+    except redis.ConnectionError:
+        message = "Could not connect to connect to Redis"
+        raise error.InternalServerError(message)
 
     return flask.json.dumps(job.id)
 
