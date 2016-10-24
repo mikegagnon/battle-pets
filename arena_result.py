@@ -29,7 +29,7 @@ def request(args):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(prog='new_pet.py')
+    parser = argparse.ArgumentParser(prog='arena_result.py')
 
     parser.add_argument('--url', nargs='?',
         help="The URL of the Arena service",
