@@ -82,7 +82,7 @@ Retrieves information about a pet.
 
 ```
 $ ./get_pet.py -h
-usage: new_pet.py [-h] [--url [URL]] [--name [NAME]] [--expect_404]
+usage: get_pet.py [-h] [--url [URL]] [--name [NAME]] [--expect_404]
 
 optional arguments:
   -h, --help     show this help message and exit
@@ -98,7 +98,7 @@ By default, `contest.py` blocks until the contest has completed.
 
 ```
 $ ./contest.py -h
-usage: new_pet.py [-h] [--url [URL]] [--name1 [NAME1]] [--name2 [NAME2]]
+usage: contest.py [-h] [--url [URL]] [--name1 [NAME1]] [--name2 [NAME2]]
                   [--category [CATEGORY]] [--unblock] [--expect_400]
 
 optional arguments:
@@ -117,7 +117,7 @@ optional arguments:
 
 ```
 $ ./history.py -h
-usage: new_pet.py [-h] [--url [URL]]
+usage: history.py [-h] [--url [URL]]
 
 optional arguments:
   -h, --help   show this help message and exit
