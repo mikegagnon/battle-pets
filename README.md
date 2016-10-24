@@ -88,7 +88,7 @@ optional arguments:
   -h, --help     show this help message and exit
   --url [URL]    The URL of the Management service
   --name [NAME]  Name of the pet
-  --expect_404   Do not print to std_err if a 4004occurs
+  --expect_404   Do not print to std_err if a 404w occurs
 ```
 
 ### `contest.py`
@@ -265,6 +265,45 @@ the oldest pet wins.
 
 The victor earns two experience points, and the 2nd-place pet
 earns one experience point.
+
+**Input JSON Schema**:
+
+```JSON
+{
+    "type": "object",
+    "properties": {
+        "name1": {
+            "type": "string"
+        },
+        "name2": {
+            "type": "string"
+        },
+        "category": {
+            "enum": ["strength", "agility", "wit", "senses"]
+        }
+    },
+    "required": ["name1", "name2", "category"]
+}
+```
+
+**Other possible responses**:
+
+- If the POST does not contain valid JSON, `/arena` responds with 
+  "400 BAD REQUEST" status code, along with
+  `{"message": "No JSON object could be decoded"}`
+- If the POST does not match the schema, `/arena` responds with
+  "400 BAD REQUEST" status code, along with
+  `{"message": "Your JSON post does not match CONTEST_SCHEMA.",
+    "CONTEST_SCHEMA": ...
+   }`
+- If either (1) name1 == name2, or (2) one or more of the pets does not exist,
+  then `/arena` responds with "400 BAD REQUEST" status code, along with
+  `{"message": "One or more of the pets you specified do not exist, or
+     you have specified that the same pet fight itself"}`.
+   It would be preferable to give each of these cases unique error messages,
+   rather then clumping them into one. However, I did not implement it that
+   way to due to time constraints and it seems like a low priority change.
+
 
 ## Bottom
 
