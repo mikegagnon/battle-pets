@@ -50,6 +50,8 @@ Then run the test:
 $ ./test.sh
 ```
 
+The output should look something like `expected_test_output.txt`, but it won't be an exact match because of timestamps.
+
 ### Crash tests
 
 I haven't implemented automated tests to cover crash failures, but we can
@@ -59,9 +61,6 @@ test manually. For instance:
 - `$ python contest.py` will display a 500 INTERNAL SERVER ERROR
 - Relaunch `redis-server`
 - `$ python contest.py` will display the result of polling and the battle
-
-
-The output should look something like `expected_test_output.txt`, but it won't be an exact match because of timestamps.
 
 ## Command-line tools
 
