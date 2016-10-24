@@ -405,10 +405,3 @@ There might be issues with my code that I'm not aware of.
 - I am unfamiliar with conventions for git commit messages
 - It's been about 12 years since I've professionally coded in Python,
   so my style is probably off.
-
-## TODO
-- README
-- Internal documentation
-- Test on linux
-- Make sure pet names are url safe
-- Record category in history
