@@ -377,37 +377,27 @@ clients can request history on a page-by-page basis. Or, `\history` could
 be implemented to take a date range as input, and only return records
 within that date range. I did not implement these features due to time constraints.
 
+## Missing features
 
-## Bottom
+- I did not implement any concept of user or authentication due to time constraints.
+- I couldn't figure out how to mock RQ and Redis, so `test.py` needs those services
+  to run.
+- I did not use TDD since I was swimming in unchartered territory (e.g. new to REST, Flask, RQ).
+  I didn't know what the interfaces were going to look like until after I coded them.
 
-ERRATA:
+## Potential issues
 
-- Never built a REST service before
-- Unfamiliar with HTTP error codes, so I may be generating inappropriate
-  errors
-- Never used Flask or sqlite before
-- Unfamiliar with conventions for git commit messages
-- It's been about 12 years since I've used SQL
+There might be issues with my code that I'm not aware of.
+
+- I've never built a REST service before, so I might be using the wrong HTTP status codes
+  or not following REST conventions
+- I am unfamiliar with conventions for git commit messages
 - It's been about 12 years since I've professionally coded in Python,
-  so my style is probably off. For example, unit tests
-- Unfamiliar with PEP 8 style
-- Never used a job queue before
-- No security built in
-- Using polling instead of callbacks
-- db connection in battle
-- testing for failed jobs
-- didn't use git branch
-- Redis necessary for test
-- Server error messages not conventional
-- TDD
+  so my style is probably off.
 
-TODO high priority
+## TODO
 - README
 - Internal documentation
 - Test on linux
 - Make sure pet names are url safe
 - Record category in history
-
-TODO low priority
-- Training interface: reports the most high value matches
-- Leader board
