@@ -111,7 +111,7 @@ def history():
     conn = db.get_db(app)
     cursor = conn.cursor()
 
-    cursor.execute('''SELECT victor, second_place, battle_timestamp
+    cursor.execute('''SELECT victor, second_place, category, battle_timestamp
                       FROM History''')
 
     rows = cursor.fetchall()

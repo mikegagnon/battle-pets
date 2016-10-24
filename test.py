@@ -354,17 +354,19 @@ class ArenaTestCase(unittest.TestCase):
 
 
             # Test History record
-            cursor.execute('''SELECT victor, second_place, battle_timestamp
+            cursor.execute('''SELECT victor, second_place, category,
+                              battle_timestamp
                               FROM History''')
 
             data = cursor.fetchall()
 
             assert len(data) == 1
 
-            victor, second_place, timestamp = data[0]
+            victor, second_place, category, timestamp = data[0]
 
             assert victor == winner
             assert second_place == loser
+            assert category == "strength"
 
             timestamp += " GMT"
 
@@ -415,14 +417,16 @@ class ArenaTestCase(unittest.TestCase):
 
         response = self.app.get("/history")
 
-        [(victor1, loser1, timestamp1),
-         (victor2, loser2, timestamp2)] = flask.json.loads(response.data)
+        [(victor1, loser1, category, timestamp1),
+         (victor2, loser2, category, timestamp2)] = flask.json.loads(response.data)
 
         assert victor1 == "foo"
         assert victor2 == "pickle"
+        assert category == "strength"
 
         assert loser1 == "bar"
         assert loser2 == "foo"
+        assert category == "strength"
 
 class BattleTestCase(unittest.TestCase):
 

@@ -24,6 +24,7 @@ def init_db(app):
     cursor.execute('''CREATE TABLE History
                  (victor TEXT,
                   second_place TEXT,
+                  category TEXT,
                   battle_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
                     NOT NULL);''')
 
