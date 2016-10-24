@@ -113,6 +113,16 @@ optional arguments:
   --expect_400          Expect a 400 error
 ```
 
+### `arena_result.py`
+```
+$ ./arena_result.py -h
+usage: arena_result.py [-h] [--url [URL]] --jobid [JOBID]
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --url [URL]      The URL of the Arena service
+  --jobid [JOBID]  Name of the pet to battle
+```
 ### `history.py`
 
 ```
