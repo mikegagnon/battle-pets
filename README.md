@@ -337,6 +337,16 @@ Or, if the job id doesn't refer to an actual contest, `/arena_result` responds w
   "404 NOT FOUND" status code along with
   `{"message": "Could not find a contest for that job ID"}`
 
+#### Note on polling
+
+I chose to use polling for contesting results for its simplicity.
+The only other alternative I can think of, is for the client to run its
+own REST service, then have the worker issue a call to the client's service
+when the battle completes. This alternative design would impose a burden
+on the client.
+
+### `[arena service]/history`
+
 ## Bottom
 
 ERRATA:
