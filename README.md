@@ -147,7 +147,7 @@ Furthermore, each attribute must be <= 1.0 and >= 0.
 
 The length of `name` must be <= 100.
 
-Possible responses:
+**Possible responses**:
 
 - Upon success, `/new-pet` responds with a "200 OK" status code, with
   an empty body. Choosing to return an empty body follows the 
