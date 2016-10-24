@@ -347,6 +347,37 @@ on the client.
 
 ### `[arena service]/history`
 
+You can get a history of all contest results by sending a GET request to
+`/history`.
+
+It will return a list of contest-records, something like:
+
+```JSON
+[
+    [
+        "Charmander",
+        "Blissey",
+        "2016-10-24 01:51:26"
+    ],
+    [
+        "Blissey",
+        "Charmander",
+        "2016-10-24 01:51:28"
+    ]
+]
+```
+
+Each contest record is a 3-tuple of (victor-name, second-place-name, battle-timestamp)
+
+#### An alternative design
+
+The `/history` method does not scale well as the number of contests goes up.
+A better idea could be to divide the history into pages, so that
+clients can request history on a page-by-page basis. Or, `\history` could
+be implemented to take a date range as input, and only return records
+within that date range. I did not implement these features due to time constraints.
+
+
 ## Bottom
 
 ERRATA:
@@ -375,6 +406,7 @@ TODO high priority
 - Internal documentation
 - Test on linux
 - Make sure pet names are url safe
+- Record category in history
 
 TODO low priority
 - Training interface: reports the most high value matches
