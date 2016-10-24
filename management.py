@@ -1,9 +1,12 @@
 import argparse
 import flask
+import re
 
 import db
 import error
 import validation
+
+pet_name_regex = re.compile("^[A-Za-z0-9]+$")
 
 app = flask.Flask(__name__)
 
@@ -55,7 +58,7 @@ def close_connection(exception):
         db.close()
 
 def valid_pet_name(petname):
-    return len(petname) <= MAX_PET_NAME_LENGTH
+    return pet_name_regex.match(petname) and len(petname) <= MAX_PET_NAME_LENGTH
 
 # The sum of the attributes must be <= 1.0
 def valid_new_pet(pet):
@@ -85,8 +88,9 @@ def new_pet():
             request_data["name"])
 
     if not valid_new_pet(request_data):
-        message = "The sum of (strength, agility, wit, senses) must be " + \
-            "<= 1.0 AND the length of name must be <= %s." % \
+        message = ("The sum of (strength, agility, wit, senses) must be " +
+            "<= 1.0 AND the length of name must be <= %s " +
+            "AND the name may only contain the characters [A-Za-z0-9].") % \
             MAX_PET_NAME_LENGTH
 
         raise error.InvalidUsage(message)

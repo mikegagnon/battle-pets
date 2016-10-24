@@ -93,23 +93,31 @@ class ManagementTestCase(unittest.TestCase):
         assert flask.json.loads(response.data)["message"] == \
             "Your JSON post does not match NEW_PET_REQUEST_SCHEMA."
 
+    invalid_pet_message = (
+        "The sum of (strength, agility, wit, senses) must be <= 1.0 " +
+        "AND the length of name must be <= %s " +
+        "AND the name may only contain the characters [A-Za-z0-9]."
+        ) % management.MAX_PET_NAME_LENGTH
+
     def test_new_pet_bad_attributes(self):
 
         response = post_new_pet(self.app, "foo", 0.25, 0.25, 0.25, 0.2500001)
         assert response.status == "400 BAD REQUEST"
-        assert flask.json.loads(response.data)["message"] == \
-            "The sum of (strength, agility, wit, senses) must be <= 1.0 " + \
-            "AND the length of name must be <= %s." % \
-            management.MAX_PET_NAME_LENGTH
+        assert flask.json.loads(response.data)["message"] ==  \
+            ManagementTestCase.invalid_pet_message
 
     def test_new_pet_bad_name(self):
         length = 1 + management.MAX_PET_NAME_LENGTH
         response = post_new_pet(self.app, "X" * length, 0.2, 0.2, 0.2, 0.2)
         assert response.status == "400 BAD REQUEST"
         assert flask.json.loads(response.data)["message"] == \
-            "The sum of (strength, agility, wit, senses) must be <= 1.0 " + \
-            "AND the length of name must be <= %s." % \
-            management.MAX_PET_NAME_LENGTH
+            ManagementTestCase.invalid_pet_message
+
+    def test_new_pet_bad_name_regex(self):
+        response = post_new_pet(self.app, "-", 0.2, 0.2, 0.2, 0.2)
+        assert response.status == "400 BAD REQUEST"
+        assert flask.json.loads(response.data)["message"] == \
+            ManagementTestCase.invalid_pet_message
 
     def test_new_pet_good_name(self):
 
