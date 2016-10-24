@@ -34,7 +34,7 @@ if __name__ == "__main__":
         default="foo", dest="name", type=str)
 
     parser.add_argument('--expect_404',
-        help="Do not print to std_err if a 4004occurs",
+        help="Do not print to std_err if a 404 occurs",
         default=False, dest="expect_404", action="store_true")
 
     args = parser.parse_args()
