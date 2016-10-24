@@ -123,6 +123,21 @@ optional arguments:
   -h, --help   show this help message and exit
   --url [URL]  The URL of the Arena service
 ```
+## Architecture decisions
+
+I chose Python because I love the language 
+
+The services are implemented in Flask. I chose Flask because it's a
+microframework, and thus has a low barrier to entry. I've never coded
+a REST service before, so barrier to entry was important.
+
+In similar reasoning for my choice for Flask, I chose RQ and Redis
+to handle the contest workers and the queue. RQ markets itself as
+"simple job queues."
+
+I chose to use JSON as the communcation protcol because it is easy to
+work with and is well supported by Python and Flask.
+
 
 ## REST interfaces
 
@@ -219,21 +234,6 @@ For example requesting `/get-pet/Dweble` might yield:
   "wit": 0.2
 }
 ```
-
-## Design decisions
-
-I chose Python because I love the language 
-
-The services are implemented in Flask. I chose Flask because it's a
-microframework, and thus has a low barrier to entry. I've never coded
-a REST service before, so barrier to entry was important.
-
-In similar reasoning for my choice for Flask, I chose RQ and Redis
-to handle the contest workers and the queue. RQ markets itself as
-"simple job queues."
-
-I chose to use JSON as the communcation protcol because it is easy to
-work with and is well supported by Python and Flask.
 
 ## Bottom
 
