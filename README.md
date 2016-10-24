@@ -135,7 +135,7 @@ optional arguments:
 ```
 ## Architecture decisions
 
-I chose Python because I love the language 
+I chose Python because I love the language.
 
 The services are implemented in Flask. I chose Flask because it's a
 microframework, and thus has a low barrier to entry. I've never coded
