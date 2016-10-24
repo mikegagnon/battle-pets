@@ -244,6 +244,28 @@ along with:
 }
 ```
 
+### `[arena service]/arena`
+
+You create a battle by issuing a POST to `/arena`.
+
+An example POST looks like:
+
+```JSON
+{
+  "name1": "Dweble",
+  "name2": "Charmander",
+  "category": "strength"
+}
+```
+
+That post would create a battle between Dweble and Charmander: whoever
+has the highest strength attribute wins. In the event of a tie,
+whoever has more experience points wins. In the event of an experience tie,
+the oldest pet wins.
+
+The victor earns two experience points, and the 2nd-place pet
+earns one experience point.
+
 ## Bottom
 
 ERRATA:
