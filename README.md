@@ -200,8 +200,25 @@ NEW_PET_REQUEST_SCHEMA = {
 }
 ```
 
-### `[management service]/new-pet`
+### `[management service]/get-pet/<string:petname>`
 
+You can retrieve all the information associated with a pet by issuing
+a GET request to `/get-pet/<string:petname>`.
+
+For example requesting `/get-pet/Dweble` might yield:
+
+```
+{
+  "agility": 0.2,
+  "experience": 0,
+  "losses": 0,
+  "name": "Dwebble",
+  "senses": 0.3,
+  "strength": 0.3,
+  "wins": 0,
+  "wit": 0.2
+}
+```
 
 ## Design decisions
 
