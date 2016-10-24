@@ -266,6 +266,16 @@ the oldest pet wins.
 The victor earns two experience points, and the 2nd-place pet
 earns one experience point.
 
+The contest runs in the background via RQ. Therefore
+a successful post to `/arena` doesn't return the result of the contest.
+Rather, it returns a job id as a JSON string. Something like:
+
+```JSON
+"e1e17a8d-8fe3-435c-9277-6b086c5b1415"
+```
+
+You use this job id when qeurying `/arena_result`.
+
 **Input JSON Schema**:
 
 ```JSON
@@ -304,6 +314,7 @@ earns one experience point.
    rather then clumping them into one. However, I did not implement it that
    way to due to time constraints and it seems like a low priority change.
 
+### `[arena service]/
 
 ## Bottom
 
